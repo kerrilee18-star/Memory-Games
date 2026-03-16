@@ -13,100 +13,26 @@
             --card-back: #3498db; 
         }
 
-        /* HARD CSS LOCK for iPhone Zoom */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
         
-        html, body {
-            overflow: hidden;
-            height: 100%;
-            width: 100%;
-            position: fixed;
-            margin: 0;
-            padding: 0;
-        }
+        html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
 
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background-color: var(--bg); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
-        .screen { 
-            width: 100%; 
-            max-width: 600px; 
-            text-align: center; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            height: 100%;
-            padding: 20px 10px;
-        }
+        .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px 10px; }
 
-        .instruction-box {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin: 15px auto;
-            width: 90%;
-            border-top: 4px solid var(--primary);
-        }
+        .instruction-box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px auto; width: 90%; border-top: 4px solid var(--primary); }
 
-        .menu-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            width: 100%; 
-            margin-top: 20px;
-        }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; margin-top: 20px; }
 
-        .lvl-btn { 
-            padding: 25px 10px; 
-            border: none; 
-            border-radius: 20px; 
-            background: white; 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08); 
-            cursor: pointer; 
-        }
+        .lvl-btn { padding: 25px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; }
         .lvl-btn b { color: var(--primary); font-size: 1.3rem; display: block; margin-bottom: 4px; }
 
-        #game-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            width: 100%; 
-            padding: 10px 15px; 
-            background: white;
-            border-radius: 18px;
-            margin-bottom: 20px;
-        }
+        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px 15px; background: white; border-radius: 18px; margin-bottom: 20px; }
 
-        #game-board { 
-            display: grid; 
-            gap: 8px; 
-            width: 100%; 
-            max-width: 100%;
-        }
+        #game-board { display: grid; gap: 8px; width: 100%; max-width: 100%; }
 
-        .card { 
-            aspect-ratio: 1/1; 
-            background: var(--card-back); 
-            border-radius: 10px; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: transform 0.4s; 
-            position: relative; 
-            transform-style: preserve-3d; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+        .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
         .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
@@ -115,6 +41,19 @@
 
         .emoji { font-size: clamp(1.2rem, 7vw, 2.5rem); }
         .word { font-size: 0.55rem; font-weight: 900; margin-top: 2px; text-transform: uppercase; color: #2d3436; }
+
+        /* Pure CSS Shape & Color Styles */
+        .visual-box { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .shape-draw { background: #444; }
+        .color-swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid #ddd; }
+
+        /* Shapes */
+        .shape-circle { width: 35px; height: 35px; border-radius: 50%; }
+        .shape-square { width: 35px; height: 35px; }
+        .shape-rectangle { width: 45px; height: 25px; }
+        .shape-triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid #444; background: none !important; }
+        .shape-oval { width: 45px; height: 30px; border-radius: 50%; }
+        .shape-star { font-size: 2.5rem; color: #f1c40f; } /* Star/Heart/Diamond better as vector-style text */
 
         .stats { display: flex; gap: 6px; }
         .stat-box { background: #f8f9fa; padding: 4px 8px; border-radius: 10px; min-width: 75px; text-align: center; }
@@ -126,21 +65,9 @@
         .hint-btn { background: #fef3c7; color: #92400e; }
         .mute-btn { background: #e2e8f0; font-size: 1.1rem; padding: 8px; border-radius: 12px; border: none; cursor: pointer; margin-left: 4px; }
 
-        .overlay { 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.85); 
-            z-index: 1000; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px;
-        }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 100%; max-width: 400px; }
-        .primary-btn { 
-            background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; 
-            font-size: 1.4rem; font-weight: 800; cursor: pointer; margin-top: 15px;
-        }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.4rem; font-weight: 800; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -202,27 +129,27 @@
 
         const categories = {
             animals: [
-                {name:'Dog', emoji:'🐶'}, {name:'Cat', emoji:'🐱'}, {name:'Mouse', emoji:'🐭'}, {name:'Rabbit', emoji:'🐰'}, 
-                {name:'Lion', emoji:'🦁'}, {name:'Cow', emoji:'🐮'}, {name:'Penguin', emoji:'🐧'}, {name:'Frog', emoji:'🐸'},
-                {name:'Monkey', emoji:'🐵'}, {name:'Tiger', emoji:'🐯'}
+                {name:'Dog', val:'🐶', type:'emoji'}, {name:'Cat', val:'🐱', type:'emoji'}, {name:'Mouse', val:'🐭', type:'emoji'}, {name:'Rabbit', val:'🐰', type:'emoji'}, 
+                {name:'Lion', val:'🦁', type:'emoji'}, {name:'Cow', val:'🐮', type:'emoji'}, {name:'Penguin', val:'🐧', type:'emoji'}, {name:'Frog', val:'🐸', type:'emoji'},
+                {name:'Monkey', val:'🐵', type:'emoji'}, {name:'Tiger', val:'🐯', type:'emoji'}
             ],
             shapes: [
-                {name:'Circle', emoji:'⭕'}, {name:'Square', emoji:'⬜'}, {name:'Star', emoji:'⭐'}, {name:'Heart', emoji:'❤️'}, 
-                {name:'Diamond', emoji:'💎'}, {name:'Rectangle', emoji:'▭'}, {name:'Triangle', emoji:'📐'}, {name:'Oval', emoji:'🥚'}
+                {name:'Circle', val:'shape-circle', type:'shape'}, {name:'Square', val:'shape-square', type:'shape'}, {name:'Star', val:'★', type:'text-shape'}, {name:'Heart', val:'♥', type:'text-shape'}, 
+                {name:'Diamond', val:'◆', type:'text-shape'}, {name:'Rectangle', val:'shape-rectangle', type:'shape'}, {name:'Triangle', val:'shape-triangle', type:'shape'}, {name:'Oval', val:'shape-oval', type:'shape'}
             ],
             school: [
-                {name:'Crayon', emoji:'🖍️'}, {name:'Pencil', emoji:'✏️'}, {name:'Pen', emoji:'🖊️'}, {name:'Scissors', emoji:'✂️'}, 
-                {name:'Ruler', emoji:'📏'}, {name:'Book', emoji:'📖'}, {name:'Notebook', emoji:'📓'}, {name:'School bag', emoji:'🎒'}
+                {name:'Crayon', val:'🖍️', type:'emoji'}, {name:'Pencil', val:'✏️', type:'emoji'}, {name:'Pen', val:'🖊️', type:'emoji'}, {name:'Scissors', val:'✂️', type:'emoji'}, 
+                {name:'Ruler', val:'📏', type:'emoji'}, {name:'Book', val:'📖', type:'emoji'}, {name:'Notebook', val:'📓', type:'emoji'}, {name:'School bag', val:'🎒', type:'emoji'}
             ],
             colors: [
-                {name:'Blue', emoji:'🔵'}, {name:'Red', emoji:'🔴'}, {name:'Green', emoji:'🟢'}, {name:'Orange', emoji:'🟠'}, 
-                {name:'Pink', emoji:'🌸'}, {name:'Purple', emoji:'🟣'}, {name:'Black', emoji:'⚫'}, {name:'White', emoji:'⚪'},
-                {name:'Grey', emoji:'🔘'}, {name:'Silver', emoji:'🥈'}, {name:'Yellow', emoji:'🟡'}, {name:'Brown', emoji:'🟤'}
+                {name:'Blue', val:'#0984e3', type:'color'}, {name:'Red', val:'#d63031', type:'color'}, {name:'Green', val:'#00b894', type:'color'}, {name:'Orange', val:'#e67e22', type:'color'}, 
+                {name:'Pink', val:'#fd79a8', type:'color'}, {name:'Purple', val:'#6c5ce7', type:'color'}, {name:'Black', val:'#2d3436', type:'color'}, {name:'White', val:'#ffffff', type:'color'},
+                {name:'Grey', val:'#95a5a6', type:'color'}, {name:'Silver', val:'#bdc3c7', type:'color'}, {name:'Yellow', val:'#f1c40f', type:'color'}, {name:'Brown', val:'#8d6e63', type:'color'}
             ],
             numbers: [
-                {name:'One', emoji:'1️⃣'}, {name:'Two', emoji:'2️⃣'}, {name:'Three', emoji:'3️⃣'}, {name:'Four', emoji:'4️⃣'}, 
-                {name:'Five', emoji:'5️⃣'}, {name:'Six', emoji:'6️⃣'}, {name:'Seven', emoji:'7️⃣'}, {name:'Eight', emoji:'8️⃣'},
-                {name:'Nine', emoji:'9️⃣'}, {name:'Ten', emoji:'🔟'}
+                {name:'One', val:'1', type:'emoji'}, {name:'Two', val:'2', type:'emoji'}, {name:'Three', val:'3', type:'emoji'}, {name:'Four', val:'4', type:'emoji'}, 
+                {name:'Five', val:'5', type:'emoji'}, {name:'Six', val:'6', type:'emoji'}, {name:'Seven', val:'7', type:'emoji'}, {name:'Eight', val:'8', type:'emoji'},
+                {name:'Nine', val:'9', type:'emoji'}, {name:'Ten', val:'10', type:'emoji'}
             ]
         };
 
@@ -239,8 +166,7 @@
         }
 
         function startGame(label, key) { 
-            currentCatKey = key;
-            currentCatLabel = label;
+            currentCatKey = key; currentCatLabel = label;
             document.getElementById('main-menu').style.display = 'none'; 
             document.getElementById('game-screen').style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label;
@@ -248,11 +174,7 @@
             setupBoard();
         }
 
-        function beginTimer() {
-            document.getElementById('start-overlay').style.display = 'none';
-            canFlip = true;
-            timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000);
-        }
+        function beginTimer() { document.getElementById('start-overlay').style.display = 'none'; canFlip = true; timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000); }
 
         function setupBoard() {
             clearInterval(timerInterval); matchedPairs = 0; seconds = 0; flippedCards = []; canFlip = false;
@@ -265,14 +187,21 @@
             
             const board = document.getElementById('game-board');
             board.innerHTML = '';
-            board.style.gridTemplateColumns = (data.length <= 8) ? "repeat(4, 1fr)" : "repeat(4, 1fr)";
+            board.style.gridTemplateColumns = "repeat(4, 1fr)";
 
             const cardsData = [...data, ...data].sort(() => Math.random() - 0.5);
             cardsData.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
-                card.innerHTML = `<div class="content"><span class="emoji">${item.emoji}</span><span class="word">${item.name}</span></div>`;
+                
+                let visual = '';
+                if(item.type === 'color') visual = `<div class="color-swatch" style="background:${item.val}"></div>`;
+                else if(item.type === 'shape') visual = `<div class="shape-draw ${item.val}"></div>`;
+                else if(item.type === 'text-shape') visual = `<span style="font-size:2.5rem; color:#444;">${item.val}</span>`;
+                else visual = `<span class="emoji">${item.val}</span>`;
+
+                card.innerHTML = `<div class="content"><div class="visual-box">${visual}</div><span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
@@ -308,15 +237,13 @@
 
         function showMenu() { location.reload(); }
         function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); beginTimer(); }
-
         function useHint() {
             if (!canFlip) return;
             seconds += 5; document.getElementById('timer').innerText = seconds;
             const hidden = Array.from(document.querySelectorAll('.card:not(.flipped):not(.matched)'));
             const names = [...new Set(hidden.map(c => c.dataset.name))].sort(() => 0.5 - Math.random()).slice(0, 1);
             const cards = hidden.filter(c => names.includes(c.dataset.name));
-            canFlip = false;
-            cards.forEach(c => c.classList.add('flipped'));
+            canFlip = false; cards.forEach(c => c.classList.add('flipped'));
             setTimeout(() => { cards.forEach(c => c.classList.remove('flipped')); canFlip = true; }, 1200);
         }
     </script>
