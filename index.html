@@ -4,68 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ESL Memory Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Andika&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
-
-        .screen { width: 100%; max-width: 500px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
-        .instruction-box { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px auto; width: 90%; border-top: 4px solid var(--primary); }
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px; }
-        .lvl-btn { padding: 20px 5px; border: none; border-radius: 20px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.08); cursor: pointer; }
-        .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; }
-
-        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 5px 10px; background: white; border-radius: 15px; margin-bottom: 8px; }
         
-        #game-board { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 6px; 
-            width: 100%; 
-            max-width: 400px; 
-            margin: 0 auto; 
-            justify-items: center;
+        /* iPhone Jump/Zoom Prevention */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+        }
+        
+        html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Andika', 'Comic Sans MS', cursive, sans-serif; 
+            background-color: var(--bg); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
         }
 
-        .card { width: 100%; aspect-ratio: 1/1; background: var(--card-back); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; }
+        .screen { width: 100%; max-width: 500px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
+        
+        .instruction-box { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 10px auto; width: 90%; border-top: 4px solid var(--primary); }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 10px; }
+        .lvl-btn { padding: 20px 5px; border: none; border-radius: 20px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; }
+        .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; }
+
+        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px; background: white; border-radius: 15px; margin-bottom: 10px; }
+        
+        #game-board { 
+            display: grid;
+            gap: 8px;
+            width: 100%;
+            flex-grow: 1;
+            padding-bottom: 20px;
+        }
+
+        .card { 
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1/1; 
+            background: var(--card-back); 
+            border-radius: 12px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: transform 0.4s; 
+            position: relative; 
+            transform-style: preserve-3d;
+        }
+
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
-        .card.flipped { background: white; transform: rotateY(180deg); border: 2px solid var(--primary); }
+        .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
-        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.7; }
+        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.6; }
 
-        .emoji { font-size: clamp(1.4rem, 7vw, 2.5rem); }
-        .word { font-size: 0.75rem; font-weight: 900; margin-top: 2px; text-transform: uppercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.2rem, 7vw, 2.3rem); }
+        /* English School Font Style */
+        .word { 
+            font-size: 0.85rem; 
+            font-weight: 400; 
+            margin-top: 2px; 
+            color: #2d3436; 
+            font-family: 'Andika', sans-serif;
+        }
 
-        .visual-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .color-swatch { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .visual-box { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; }
+        .color-swatch { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
         .shape-draw { width: 30px; height: 30px; }
         .shape-circle { border-radius: 50%; }
-        .shape-rectangle { width: 36px; height: 22px; }
+        .shape-rectangle { width: 34px; height: 20px; }
         .shape-triangle { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 28px solid black; background: none !important; }
-        .shape-oval { width: 38px; height: 24px; border-radius: 50%; }
+        .shape-oval { width: 36px; height: 24px; border-radius: 50%; }
 
-        .stats { display: flex; gap: 3px; }
-        .stat-box { background: #f8f9fa; padding: 2px 5px; border-radius: 8px; min-width: 55px; text-align: center; }
+        .stats { display: flex; gap: 4px; }
+        .stat-box { background: #f8f9fa; padding: 2px 4px; border-radius: 8px; min-width: 55px; }
         .stat-label { font-size: 0.45rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 0.85rem; color: var(--primary); font-weight: 800; }
+        .stat-value { font-size: 0.8rem; color: var(--primary); font-weight: 800; }
 
-        .nav-btn { padding: 8px; border: none; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 0.65rem; }
+        .nav-btn { padding: 8px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 0.6rem; font-family: inherit; }
         .back-btn { background: #edf2f7; color: #4a5568; }
         .hint-btn { background: #fef3c7; color: #92400e; }
-        .mute-btn { background: #e2e8f0; font-size: 1rem; padding: 5px; border-radius: 10px; border: none; }
+        .mute-btn { background: #e2e8f0; font-size: 1rem; padding: 6px; border-radius: 10px; border: none; cursor: pointer; }
 
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-        .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 95%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1.3rem; font-weight: 800; margin-top: 10px; cursor: pointer; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 400px; max-height: 85vh; overflow-y: auto; }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
 
-        .vocab-list { margin: 15px 0; text-align: right; border-collapse: collapse; width: 100%; }
-        .vocab-list tr { border-bottom: 1px solid #eee; }
-        .vocab-list td { padding: 8px; font-size: 1rem; }
-        .eng { font-weight: bold; text-align: left; color: var(--primary); }
+        .vocab-list { width: 100%; border-collapse: collapse; text-align: right; margin: 15px 0; border-top: 2px solid var(--primary); }
+        .vocab-list td { padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 1.1rem; }
+        .eng { font-weight: 400; text-align: left; color: var(--primary); font-family: 'Andika', sans-serif; }
     </style>
 </head>
 <body>
@@ -89,11 +123,11 @@
         <div id="game-header">
             <button class="nav-btn back-btn" onclick="showMenu()">MENU<br>תפריט</button>
             <div class="stats">
-                <div class="stat-box"><span id="timer" class="stat-value">0</span><span class="stat-label">TIME</span></div>
-                <div class="stat-box"><span id="best-score" class="stat-value">--</span><span class="stat-label">BEST</span></div>
-                <div class="stat-box"><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span><span class="stat-label">SCORE</span></div>
+                <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-value">0</span></div>
+                <div class="stat-box"><span class="stat-label">BEST</span><span id="best-score" class="stat-value">--</span></div>
+                <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
             </div>
-            <div style="display:flex; align-items:center; gap:5px;">
+            <div style="display:flex; align-items:center; gap:4px;">
                 <button class="nav-btn hint-btn" onclick="useHint()">HINT<br>רמז</button>
                 <button class="mute-btn" id="mute-toggle" onclick="toggleMute()">🔊</button>
             </div>
@@ -104,17 +138,15 @@
     <div id="start-overlay" class="overlay">
         <div class="pop-box">
             <h2 id="lvl-title">Category</h2>
-            <p>Ready to start? / מוכנים להתחיל?</p>
             <button class="primary-btn" onclick="beginTimer()">START! / התחל!</button>
         </div>
     </div>
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h2 style="color: var(--secondary); margin:0;">EXCELLENT!</h2>
+            <h2 style="color: var(--secondary); margin:0;">WELL DONE!</h2>
             <p>Time: <b><span id="final-time">0</span>s</b></p>
-            <hr>
-            <h3 style="margin:10px 0 5px 0;">Vocabulary Review</h3>
+            <h3 style="margin: 15px 0 5px 0;">Vocabulary Review</h3>
             <table class="vocab-list" id="vocab-table"></table>
             <button class="primary-btn" style="background:var(--secondary);" onclick="resetGame()">PLAY AGAIN</button>
             <button class="primary-btn" style="background:#edf2f7; color:#4a5568; font-size:1rem;" onclick="showMenu()">BACK TO MENU</button>
@@ -144,12 +176,12 @@
                 {name:'Blue', heb:'כחול', val:'#0984e3', type:'color'}, {name:'Red', heb:'אדום', val:'#d63031', type:'color'}, {name:'Green', heb:'ירוק', val:'#27ae60', type:'color'}, 
                 {name:'Orange', heb:'כתום', val:'#e67e22', type:'color'}, {name:'Pink', heb:'ורוד', val:'#fd79a8', type:'color'}, {name:'Purple', heb:'סגול', val:'#6c5ce7', type:'color'}, 
                 {name:'Black', heb:'שחור', val:'#2d3436', type:'color'}, {name:'White', heb:'לבן', val:'#ffffff', type:'color'}, {name:'Gray', heb:'אפור', val:'#7f8c8d', type:'color'}, 
-                {name:'Yellow', heb:'צהוב', val:'#f1c40f', type:'color'}, {name:'Brown', heb:'חום', val:'#5D4037', type:'color'}, {name:'Gold', heb:'זהב', val:'gold-metallic', type:'special-color'}
+                {name:'Yellow', heb:'צהוב', val:'#f1c40f', type:'color'}, {name:'Brown', heb:'חום', val:'#CD853F', type:'color'}, {name:'Gold', heb:'זהב', val:'gold-metallic', type:'special-color'}
             ],
             numbers: [
-                {name:'1', heb:'אחת', val:'1', type:'num'}, {name:'2', heb:'שתיים', val:'2', type:'num'}, {name:'3', heb:'שלוש', val:'3', type:'num'}, {name:'4', heb:'ארבע', val:'4', type:'num'}, 
-                {name:'5', heb:'חמש', val:'5', type:'num'}, {name:'6', heb:'שש', val:'6', type:'num'}, {name:'7', heb:'שבע', val:'7', type:'num'}, {name:'8', heb:'שמונה', val:'8', type:'num'},
-                {name:'9', heb:'תשע', val:'9', type:'num'}, {name:'10', heb:'עשר', val:'10', type:'num'}
+                {name:'One', heb:'אחת', val:'1', type:'num'}, {name:'Two', heb:'שתיים', val:'2', type:'num'}, {name:'Three', heb:'שלוש', val:'3', type:'num'}, {name:'Four', heb:'ארבע', val:'4', type:'num'}, 
+                {name:'Five', heb:'חמש', val:'5', type:'num'}, {name:'Six', heb:'שש', val:'6', type:'num'}, {name:'Seven', heb:'שבע', val:'7', type:'num'}, {name:'Eight', heb:'שמונה', val:'8', type:'num'},
+                {name:'Nine', heb:'תשע', val:'9', type:'num'}, {name:'Ten', heb:'עשר', val:'10', type:'num'}
             ]
         };
 
@@ -168,23 +200,27 @@
             setupBoard();
         }
 
-        function beginTimer() { document.getElementById('start-overlay').style.display = 'none'; canFlip = true; timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000); }
-
         function setupBoard() {
-            clearInterval(timerInterval); matchedPairs = 0; seconds = 0; flippedCards = []; canFlip = false;
             const data = categories[currentCatKey];
+            const board = document.getElementById('game-board');
+            
+            // Balanced Grid Logic
+            const total = data.length * 2;
+            let cols = 4;
+            board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+            board.innerHTML = '';
+            matchedPairs = 0; seconds = 0; flippedCards = [];
             document.getElementById('score').innerText = '0';
             document.getElementById('total-pairs').innerText = data.length;
             document.getElementById('timer').innerText = '0';
-            const best = localStorage.getItem('best_cat_' + currentCatKey);
-            document.getElementById('best-score').innerText = best ? best : '--';
-            const board = document.getElementById('game-board');
-            board.innerHTML = '';
+            
             const cardsData = [...data, ...data].sort(() => Math.random() - 0.5);
             cardsData.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
+                
                 let visual = '';
                 if(item.type === 'color') visual = `<div class="color-swatch" style="background:${item.val}"></div>`;
                 else if(item.type === 'special-color') visual = `<div class="color-swatch ${item.val}"></div>`;
@@ -192,14 +228,17 @@
                     const style = item.val === 'shape-triangle' ? `border-bottom-color:${item.color}` : `background:${item.color}`;
                     visual = `<div class="shape-draw ${item.val}" style="${style}"></div>`;
                 }
-                else if(item.type === 'text-shape') visual = `<span style="font-size:2rem; color:${item.color}">${item.val}</span>`;
-                else if(item.type === 'num') visual = `<span style="font-size:1.8rem; font-weight:bold;">${item.val}</span>`;
+                else if(item.type === 'text-shape') visual = `<span style="font-size:1.8rem; color:${item.color}">${item.val}</span>`;
+                else if(item.type === 'num') visual = `<span style="font-size:1.8rem; font-weight:bold; color:#2d3436;">${item.val}</span>`;
                 else visual = `<span class="emoji">${item.val}</span>`;
+
                 card.innerHTML = `<div class="content"><div class="visual-box">${visual}</div><span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
         }
+
+        function beginTimer() { document.getElementById('start-overlay').style.display = 'none'; canFlip = true; timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000); }
 
         function flipCard(card, name) {
             if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) return;
@@ -216,25 +255,22 @@
                 matchedPairs++;
                 document.getElementById('score').innerText = matchedPairs;
                 flippedCards = []; canFlip = true;
-                if (matchedPairs === categories[currentCatKey].length) { clearInterval(timerInterval); handleWin(); }
+                if (matchedPairs === categories[currentCatKey].length) { 
+                    clearInterval(timerInterval); 
+                    setTimeout(showWin, 600);
+                }
             } else { setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 800); }
         }
 
-        function handleWin() {
-            const bestKey = 'best_cat_' + currentCatKey;
-            const prev = localStorage.getItem(bestKey);
-            if(!prev || seconds < prev) localStorage.setItem(bestKey, seconds);
-            document.getElementById('final-time').innerText = seconds; 
-            
+        function showWin() {
             const table = document.getElementById('vocab-table');
             table.innerHTML = '';
             categories[currentCatKey].forEach(item => {
-                const row = `<tr><td class="eng">${item.name}</td><td>${item.heb}</td></tr>`;
-                table.innerHTML += row;
+                table.innerHTML += `<tr><td class="eng">${item.name}</td><td>${item.heb}</td></tr>`;
             });
-
-            document.getElementById('win-overlay').style.display = 'flex'; 
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
+            document.getElementById('final-time').innerText = seconds;
+            document.getElementById('win-overlay').style.display = 'flex';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
 
         function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); beginTimer(); }
