@@ -14,56 +14,51 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        
         html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
-
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
-        .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px 10px; }
+        .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 15px 10px; }
+        .instruction-box { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 10px auto; width: 90%; border-top: 4px solid var(--primary); }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; margin-top: 10px; }
+        .lvl-btn { padding: 20px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; }
+        .lvl-btn b { color: var(--primary); font-size: 1.2rem; display: block; margin-bottom: 4px; }
 
-        .instruction-box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px auto; width: 90%; border-top: 4px solid var(--primary); }
+        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 12px; background: white; border-radius: 18px; margin-bottom: 10px; }
+        #game-board { display: grid; gap: 8px; width: 100%; max-height: 75vh; overflow-y: auto; padding: 5px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
 
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; margin-top: 20px; }
-
-        .lvl-btn { padding: 25px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; }
-        .lvl-btn b { color: var(--primary); font-size: 1.3rem; display: block; margin-bottom: 4px; }
-
-        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px 15px; background: white; border-radius: 18px; margin-bottom: 20px; }
-
-        #game-board { display: grid; gap: 8px; width: 100%; max-width: 100%; }
-
-        .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-
+        .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
         .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.8; }
 
-        .emoji { font-size: clamp(1.2rem, 7vw, 2.5rem); }
-        .word { font-size: 0.55rem; font-weight: 900; margin-top: 2px; text-transform: uppercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.6rem, 9vw, 3rem); }
+        .word { font-size: 0.85rem; font-weight: 900; margin-top: 5px; text-transform: uppercase; color: #2d3436; }
 
-        /* Pure CSS Shape & Color Styles */
-        .visual-box { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
-        .shape-draw { background: #444; }
-        .color-swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid #ddd; }
+        .visual-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .color-swatch { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        
+        /* Legit Gold Metallic Effect */
+        .gold-metallic { 
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); 
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
 
-        /* Shapes */
-        .shape-circle { width: 35px; height: 35px; border-radius: 50%; }
+        .shape-circle { width: 38px; height: 38px; border-radius: 50%; }
         .shape-square { width: 35px; height: 35px; }
-        .shape-rectangle { width: 45px; height: 25px; }
-        .shape-triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid #444; background: none !important; }
+        .shape-rectangle { width: 45px; height: 26px; }
+        .shape-triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid black; background: none !important; }
         .shape-oval { width: 45px; height: 30px; border-radius: 50%; }
-        .shape-star { font-size: 2.5rem; color: #f1c40f; } /* Star/Heart/Diamond better as vector-style text */
 
-        .stats { display: flex; gap: 6px; }
-        .stat-box { background: #f8f9fa; padding: 4px 8px; border-radius: 10px; min-width: 75px; text-align: center; }
-        .stat-label { font-size: 0.5rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 1rem; color: var(--primary); font-weight: 800; }
+        .stats { display: flex; gap: 4px; }
+        .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 65px; text-align: center; }
+        .stat-label { font-size: 0.45rem; color: #718096; display: block; font-weight: bold; }
+        .stat-value { font-size: 0.85rem; color: var(--primary); font-weight: 800; }
 
-        .nav-btn { padding: 10px 14px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.7rem; }
+        .nav-btn { padding: 8px 10px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.65rem; }
         .back-btn { background: #edf2f7; color: #4a5568; }
         .hint-btn { background: #fef3c7; color: #92400e; }
-        .mute-btn { background: #e2e8f0; font-size: 1.1rem; padding: 8px; border-radius: 12px; border: none; cursor: pointer; margin-left: 4px; }
+        .mute-btn { background: #e2e8f0; font-size: 1rem; padding: 6px; border-radius: 12px; border: none; cursor: pointer; margin-left: 2px; }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 100%; max-width: 400px; }
@@ -75,8 +70,8 @@
     <div id="main-menu" class="screen">
         <h1>🧠 Memory Game</h1>
         <div class="instruction-box">
-            <p>Click the tiles to match two of a kind. How fast can you do it?</p>
-            <p dir="rtl" style="font-weight: 600;">לחצו על האריחים כדי להתאים שניים מאותו סוג. כמה מהר תוכלו לעשות זאת?</p>
+            <p>Click the tiles to match the pairs!</p>
+            <p dir="rtl" style="font-weight: 600;">לחצו על האריחים כדי להתאים את הזוגות!</p>
         </div>
         <div class="menu-grid">
             <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b>Animals</b> חיות</button>
@@ -93,7 +88,7 @@
             <div class="stats">
                 <div class="stat-box"><span class="stat-label">TIME / זמן</span><span id="timer" class="stat-value">0</span></div>
                 <div class="stat-box"><span class="stat-label">BEST / שיא</span><span id="best-score" class="stat-value">--</span></div>
-                <div class="stat-box"><span class="stat-label">SCORE / ניקוד</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">8</span></span></div>
+                <div class="stat-box"><span class="stat-label">SCORE / ניקוד</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
             </div>
             <div style="display:flex; align-items:center;">
                 <button class="nav-btn hint-btn" onclick="useHint()">HINT<br>רמז</button>
@@ -106,7 +101,7 @@
     <div id="start-overlay" class="overlay">
         <div class="pop-box">
             <h2 id="lvl-title">Category</h2>
-            <p>Ready to start? / מוכנים להתחיל?</p>
+            <p>Ready? / מוכנים?</p>
             <button class="primary-btn" onclick="beginTimer()">START! / התחל!</button>
         </div>
     </div>
@@ -120,13 +115,6 @@
     </div>
 
     <script>
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', (event) => {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) event.preventDefault();
-            lastTouchEnd = now;
-        }, false);
-
         const categories = {
             animals: [
                 {name:'Dog', val:'🐶', type:'emoji'}, {name:'Cat', val:'🐱', type:'emoji'}, {name:'Mouse', val:'🐭', type:'emoji'}, {name:'Rabbit', val:'🐰', type:'emoji'}, 
@@ -134,39 +122,38 @@
                 {name:'Monkey', val:'🐵', type:'emoji'}, {name:'Tiger', val:'🐯', type:'emoji'}
             ],
             shapes: [
-                {name:'Circle', val:'shape-circle', type:'shape'}, {name:'Square', val:'shape-square', type:'shape'}, {name:'Star', val:'★', type:'text-shape'}, {name:'Heart', val:'♥', type:'text-shape'}, 
-                {name:'Diamond', val:'◆', type:'text-shape'}, {name:'Rectangle', val:'shape-rectangle', type:'shape'}, {name:'Triangle', val:'shape-triangle', type:'shape'}, {name:'Oval', val:'shape-oval', type:'shape'}
+                {name:'Circle', val:'shape-circle', type:'shape', color:'#e74c3c'}, 
+                {name:'Square', val:'shape-square', type:'shape', color:'#3498db'}, 
+                {name:'Star', val:'★', type:'text-shape', color:'#f1c40f'}, 
+                {name:'Heart', val:'♥', type:'text-shape', color:'#fd79a8'}, 
+                {name:'Diamond', val:'◆', type:'text-shape', color:'#9b59b6'}, 
+                {name:'Rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71'}, 
+                {name:'Triangle', val:'shape-triangle', type:'shape', color:'#e67e22'}, 
+                {name:'Oval', val:'shape-oval', type:'shape', color:'#7f8c8d'}
             ],
             school: [
                 {name:'Crayon', val:'🖍️', type:'emoji'}, {name:'Pencil', val:'✏️', type:'emoji'}, {name:'Pen', val:'🖊️', type:'emoji'}, {name:'Scissors', val:'✂️', type:'emoji'}, 
                 {name:'Ruler', val:'📏', type:'emoji'}, {name:'Book', val:'📖', type:'emoji'}, {name:'Notebook', val:'📓', type:'emoji'}, {name:'School bag', val:'🎒', type:'emoji'}
             ],
             colors: [
-                {name:'Blue', val:'#0984e3', type:'color'}, {name:'Red', val:'#d63031', type:'color'}, {name:'Green', val:'#00b894', type:'color'}, {name:'Orange', val:'#e67e22', type:'color'}, 
+                {name:'Blue', val:'#0984e3', type:'color'}, {name:'Red', val:'#d63031', type:'color'}, {name:'Green', val:'#27ae60', type:'color'}, {name:'Orange', val:'#e67e22', type:'color'}, 
                 {name:'Pink', val:'#fd79a8', type:'color'}, {name:'Purple', val:'#6c5ce7', type:'color'}, {name:'Black', val:'#2d3436', type:'color'}, {name:'White', val:'#ffffff', type:'color'},
-                {name:'Grey', val:'#95a5a6', type:'color'}, {name:'Silver', val:'#bdc3c7', type:'color'}, {name:'Yellow', val:'#f1c40f', type:'color'}, {name:'Brown', val:'#8d6e63', type:'color'}
+                {name:'Gray', val:'#7f8c8d', type:'color'}, {name:'Yellow', val:'#f1c40f', type:'color'}, {name:'Brown', val:'#5d4037', type:'color'}, {name:'Gold', val:'gold-metallic', type:'special-color'}
             ],
             numbers: [
-                {name:'One', val:'1', type:'emoji'}, {name:'Two', val:'2', type:'emoji'}, {name:'Three', val:'3', type:'emoji'}, {name:'Four', val:'4', type:'emoji'}, 
-                {name:'Five', val:'5', type:'emoji'}, {name:'Six', val:'6', type:'emoji'}, {name:'Seven', val:'7', type:'emoji'}, {name:'Eight', val:'8', type:'emoji'},
-                {name:'Nine', val:'9', type:'emoji'}, {name:'Ten', val:'10', type:'emoji'}
+                {name:'1', val:'1', type:'emoji'}, {name:'2', val:'2', type:'emoji'}, {name:'3', val:'3', type:'emoji'}, {name:'4', val:'4', type:'emoji'}, 
+                {name:'5', val:'5', type:'emoji'}, {name:'6', val:'6', type:'emoji'}, {name:'7', val:'7', type:'emoji'}, {name:'8', val:'8', type:'emoji'},
+                {name:'9', val:'9', type:'emoji'}, {name:'10', val:'10', type:'emoji'}
             ]
         };
 
-        let currentCatKey = 'animals', currentCatLabel = 'Animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
+        let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
 
         function toggleMute() { isMuted = !isMuted; document.getElementById('mute-toggle').innerText = isMuted ? '🔇' : '🔊'; }
-
-        function speak(text) {
-            if (isMuted) return;
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = 'en-US';
-            window.speechSynthesis.speak(msg);
-        }
-
+        function speak(text) { if (isMuted) return; window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; window.speechSynthesis.speak(msg); }
+        function showMenu() { location.reload(); }
         function startGame(label, key) { 
-            currentCatKey = key; currentCatLabel = label;
+            currentCatKey = key;
             document.getElementById('main-menu').style.display = 'none'; 
             document.getElementById('game-screen').style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label;
@@ -187,8 +174,7 @@
             
             const board = document.getElementById('game-board');
             board.innerHTML = '';
-            board.style.gridTemplateColumns = "repeat(4, 1fr)";
-
+            
             const cardsData = [...data, ...data].sort(() => Math.random() - 0.5);
             cardsData.forEach(item => {
                 const card = document.createElement('div');
@@ -197,8 +183,12 @@
                 
                 let visual = '';
                 if(item.type === 'color') visual = `<div class="color-swatch" style="background:${item.val}"></div>`;
-                else if(item.type === 'shape') visual = `<div class="shape-draw ${item.val}"></div>`;
-                else if(item.type === 'text-shape') visual = `<span style="font-size:2.5rem; color:#444;">${item.val}</span>`;
+                else if(item.type === 'special-color') visual = `<div class="color-swatch ${item.val}"></div>`;
+                else if(item.type === 'shape') {
+                    const style = item.val === 'shape-triangle' ? `border-bottom-color:${item.color}` : `background:${item.color}`;
+                    visual = `<div class="shape-draw ${item.val}" style="${style}"></div>`;
+                }
+                else if(item.type === 'text-shape') visual = `<span style="font-size:2.8rem; color:${item.color}">${item.val}</span>`;
                 else visual = `<span class="emoji">${item.val}</span>`;
 
                 card.innerHTML = `<div class="content"><div class="visual-box">${visual}</div><span class="word">${item.name}</span></div>`;
@@ -235,7 +225,6 @@
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
         }
 
-        function showMenu() { location.reload(); }
         function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); beginTimer(); }
         function useHint() {
             if (!canFlip) return;
