@@ -9,113 +9,128 @@
     <style>
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         
-        /* Strict Zoom/Jump Prevention */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
         
+        /* Prevents jumpy scrolling and zooming */
         html, body { 
-            overflow: hidden; 
-            height: 100%; 
-            width: 100%; 
-            position: fixed; 
-            margin: 0; 
-            padding: 0; 
+            overflow: hidden; height: 100%; width: 100%; 
+            position: fixed; margin: 0; padding: 0; 
+            background-color: var(--bg); font-family: 'Andika', sans-serif;
         }
 
-        body { font-family: 'Andika', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
-
-        .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
+        .screen { 
+            width: 100%; height: 100%; 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 10px; padding-top: env(safe-area-inset-top);
+        }
         
-        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px; background: white; border-radius: 15px; margin-bottom: 10px; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        #game-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 95%; max-width: 800px; padding: 10px; 
+            background: white; border-radius: 15px; margin-bottom: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        }
         
-        /* Table/Tablet Fix: Prevent board from jumping */
+        /* Responsive Grid: Cards resize based on screen height and width */
         #game-board { 
-            display: grid; 
-            gap: 8px; 
-            width: 100%; 
-            max-height: 72vh;
+            display: grid; gap: 10px; 
+            width: 95%; max-width: 800px;
             grid-template-columns: repeat(4, 1fr);
-            justify-items: center;
-            align-content: start;
-            touch-action: none; 
+            justify-items: center; align-content: center;
+            flex-grow: 1; touch-action: none;
         }
 
         .card { 
             width: 100%; aspect-ratio: 1/1; 
-            background: var(--card-back); 
-            border-radius: 10px; 
-            cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            transition: transform 0.3s; position: relative; transform-style: preserve-3d;
+            background: var(--card-back); border-radius: 12px; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative; transform-style: preserve-3d;
         }
 
         .card .content { 
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%; pointer-events: none; padding: 2px;
+            width: 100%; height: 100%; pointer-events: none; padding: 5%;
         }
 
-        .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
+        .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
-        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
+        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.3; }
 
-        .visual-box { flex: 1.2; display: flex; align-items: center; justify-content: center; min-height: 0; width: 100%; }
-        .emoji { font-size: clamp(1.6rem, 10vw, 2.5rem); line-height: 1; }
-        .word { font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 400; color: #2d3436; text-transform: lowercase; margin-bottom: 4px; }
+        /* Responsive Text Sizing */
+        .emoji { font-size: clamp(1.8rem, 8vh, 3.5rem); line-height: 1; }
+        .word { 
+            font-size: clamp(0.9rem, 2.5vh, 1.4rem); 
+            font-weight: 400; color: #2d3436; 
+            text-transform: lowercase; margin-top: 4px;
+        }
 
-        .color-swatch { width: 55%; aspect-ratio: 1/1; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
-        .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
-
-        .vocab-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .vocab-list td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .eng-col { text-align: left; color: var(--primary); font-size: 1.1rem; cursor: pointer; }
-        .heb-col { text-align: right; font-size: 1.2rem; }
-
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 95%; overflow-y: auto; padding-bottom: 20px; }
-        .lvl-btn { padding: 15px 5px; border: none; border-radius: 12px; background: white; font-family: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; }
-        .stats { display: flex; gap: 6px; }
-        .stat-box { background: #f8f9fa; padding: 4px 8px; border-radius: 10px; min-width: 60px; }
-        .stat-label { font-size: 0.5rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 0.8rem; font-weight: 800; color: var(--primary); }
+        .color-swatch { width: 60%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); }
         
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .pop-box { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; font-size: 1.1rem; margin-top: 10px; font-family: inherit; cursor: pointer; }
+        /* Menu Buttons */
+        .menu-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; 
+            width: 95%; max-width: 600px; margin-top: 10px;
+        }
+        .lvl-btn { 
+            padding: clamp(15px, 3vh, 25px) 10px; border: none; border-radius: 15px; 
+            background: white; font-family: inherit; font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer;
+        }
+
+        .overlay { 
+            display: none; position: fixed; inset: 0; 
+            background: rgba(255,255,255,0.95); z-index: 1000; 
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .pop-box { 
+            background: white; padding: 30px; border-radius: 30px; 
+            width: 100%; max-width: 500px; max-height: 90vh; 
+            overflow-y: auto; text-align: center; border: 4px solid var(--primary);
+        }
+        .primary-btn { 
+            background: var(--primary); color: white; width: 100%; padding: 18px; 
+            border: none; border-radius: 15px; font-weight: 800; font-size: 1.2rem; 
+            margin-top: 10px; font-family: inherit; cursor: pointer;
+        }
+
+        /* Review Table */
+        .vocab-list { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .vocab-list td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .heb-col { text-align: right; font-size: 1.4rem; font-weight: bold; }
+        .eng-col { text-align: left; font-size: 1.2rem; color: var(--primary); font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div id="main-menu" class="screen">
-        <h1 style="margin: 10px 0;">🧠 Memory Game</h1>
+        <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 5px;">Memory Game</h1>
+        <p style="margin: 0 0 15px 0; color: #636e72;">Choose a Category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
         <div class="menu-grid">
-            <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b style="color:var(--primary)">Animals</b><br>חַיּוֹת</button>
-            <button class="lvl-btn" onclick="startGame('Colors', 'colors')"><b style="color:var(--primary)">Colors</b><br>צְבָעִים</button>
-            <button class="lvl-btn" onclick="startGame('Emotions', 'emotions')"><b style="color:var(--primary)">Emotions</b><br>רְגָשׁוֹת</button>
-            <button class="lvl-btn" onclick="startGame('Sport', 'sport')"><b style="color:var(--primary)">Sport</b><br>סְפּוֹרְט</button>
-            <button class="lvl-btn" onclick="startGame('Body Parts', 'body')"><b style="color:var(--primary)">Body Parts</b><br>חלקי גוף</button>
-            <button class="lvl-btn" onclick="startGame('School', 'school')"><b style="color:var(--primary)">School</b><br>בֵּית סֵפֶר</button>
-            <button class="lvl-btn" onclick="startGame('Numbers', 'numbers')"><b style="color:var(--primary)">Numbers</b><br>מִסְפָּרִים</button>
-            <button class="lvl-btn" onclick="startGame('Shapes', 'shapes')"><b style="color:var(--primary)">Shapes</b><br>צוּרוֹת</button>
+            <button class="lvl-btn" onclick="startGame('emotions')"><b>Emotions</b><br>רְגָשׁוֹת</button>
+            <button class="lvl-btn" onclick="startGame('sport')"><b>Sport</b><br>סְפּוֹרְט</button>
+            <button class="lvl-btn" onclick="startGame('body')"><b>Body Parts</b><br>חֶלְקֵי גּוּף</button>
+            <button class="lvl-btn" onclick="startGame('animals')"><b>Animals</b><br>חַיּוֹת</button>
+            <button class="lvl-btn" onclick="startGame('colors')"><b>Colors</b><br>צְבָעִים</button>
+            <button class="lvl-btn" onclick="startGame('school')"><b>School</b><br>בֵּית סֵפֶר</button>
         </div>
     </div>
 
     <div id="game-screen" class="screen" style="display:none;">
         <div id="game-header">
-            <button style="border:none; padding:8px 12px; border-radius:12px; font-family:inherit; font-size:0.7rem; font-weight:bold; background:#edf2f7;" onclick="location.reload()">MENU<br>תַּפְרִיט</button>
-            <div class="stats">
-                <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-value">0</span></div>
-                <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
+            <button style="border:none; padding:10px 15px; border-radius:12px; font-family:inherit; font-weight:bold; background:#edf2f7; color:#4a5568;" onclick="location.reload()">MENU / תַּפְרִיט</button>
+            <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem;">
+                <span id="score">0</span> / <span id="total-pairs">0</span>
             </div>
-            <button id="mute-toggle" style="border:none; background:none; font-size:1.4rem; cursor:pointer;" onclick="toggleMute()">🔊</button>
+            <button id="mute-toggle" style="border:none; background:none; font-size:1.8rem; cursor:pointer;" onclick="toggleMute()">🔊</button>
         </div>
         <div id="game-board"></div>
     </div>
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h1 style="color: var(--secondary); margin:0;">Well Done! כָּל הַכָּבוֹד!</h1>
+            <h1 style="color: var(--secondary); margin:0; font-size: 2.5rem;">Great Job!</h1>
+            <h2 style="margin:0 0 10px 0; color: #2d3436;">כָּל הַכָּבוֹד!</h2>
             <table class="vocab-list" id="vocab-table"></table>
             <button class="primary-btn" onclick="resetGame()">Play Again / שַׂחֲקוּ שׁוּב</button>
             <button class="primary-btn" style="background:#edf2f7; color:#4a5568;" onclick="location.reload()">Main Menu / תַּפְרִיט רָאשִׁי</button>
@@ -125,12 +140,12 @@
     <script>
         const categories = {
             emotions: [
-                {name:'happy', heb:'שָׂמֵחַ', val:'😊'}, {name:'sad', heb:'עָצוּב', val:'😢'}, {name:'excited', heb:'נִרְגָּשׁ', val:'🤩'}, 
-                {name:'tired', heb:'עָיֵף', val:'😴'}, {name:'sick', heb:'חוֹלֶה', val:'🤒'}, {name:'scared', heb:'מְפֻחָד', val:'😨'}, 
-                {name:'angry', heb:'כּוֹעֵס', val:'😠'}, {name:'silly', heb:'מְטֻפָּשׁ', val:'🤪'}
+                {name:'happy', heb:'שָׂמֵחַ', val:'😀'}, {name:'excited', heb:'נִרְגָּשׁ', val:'😆'}, {name:'sad', heb:'עָצוּב', val:'☹️'}, 
+                {name:'tired', heb:'עָיֵף', val:'🥱'}, {name:'sick', heb:'חוֹלֶה', val:'🤒'}, {name:'silly', heb:'מְטֻפָּשׁ', val:'🤪'}, 
+                {name:'angry', heb:'כּוֹעֵס', val:'😡'}, {name:'scared', heb:'מְפֻחָד', val:'😳'}, {name:'surprised', heb:'מֻפְתָּע', val:'😧'}
             ],
             sport: [
-                {name:'baseball', heb:'בֵּיְסְבּוֹל', val:'⚾'}, {name:'basketball', heb:'כַּדורְסַל', val:'🏀'}, {name:'soccer', heb:'כַּדורֶגֶל', val:'⚽'}, 
+                {name:'baseball', heb:'בֵּיְסְבּוֹל', val:'⚾'}, {name:'basketball', heb:'כַּדּוּרְסַל', val:'🏀'}, {name:'soccer', heb:'כַּדּוּרֶגֶל', val:'⚽'}, 
                 {name:'football', heb:'פּוּטְבּוֹל', val:'🏈'}, {name:'tennis', heb:'טֶנִיס', val:'🎾'}, {name:'ping pong', heb:'פִּינְג פּוֹנְג', val:'🏓'}
             ],
             body: [
@@ -142,31 +157,34 @@
                 {name:'blue', heb:'כָּחֹל', val:'#0984e3', type:'color'}, {name:'red', heb:'אָדֹם', val:'#d63031', type:'color'}, {name:'green', heb:'יָרֹק', val:'#27ae60', type:'color'}, 
                 {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#5D4037', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
             ],
-            animals: [{name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'}],
-            school: [{name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'}],
-            numbers: [{name:'one', heb:'אַחַת', val:'1', type:'num'}, {name:'two', heb:'שְׁתַּיִם', val:'2', type:'num'}],
-            shapes: [{name:'circle', heb:'עִגּוּל', val:'shape-circle', type:'shape', color:'#e74c3c'}]
+            animals: [
+                {name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'},
+                {name:'rabbit', heb:'אַרְנָב', val:'🐰'}, {name:'monkey', heb:'קוֹף', val:'🐵'}
+            ],
+            school: [
+                {name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'},
+                {name:'ruler', heb:'סַרְגֵּל', val:'📏'}, {name:'pen', heb:'עֵט', val:'🖊️'}
+            ]
         };
 
-        let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
+        let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, canFlip = false, isMuted = false;
 
         function toggleMute() { isMuted = !isMuted; document.getElementById('mute-toggle').innerText = isMuted ? '🔇' : '🔊'; }
         function speak(text) { if (isMuted) return; window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; window.speechSynthesis.speak(msg); }
 
-        function startGame(label, key) { 
+        function startGame(key) { 
             currentCatKey = key;
             document.getElementById('main-menu').style.display = 'none'; 
             document.getElementById('game-screen').style.display = 'flex'; 
             setupBoard();
             canFlip = true;
-            timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000);
         }
 
         function setupBoard() {
             const data = categories[currentCatKey];
             const board = document.getElementById('game-board');
             board.innerHTML = '';
-            matchedPairs = 0; seconds = 0; flippedCards = [];
+            matchedPairs = 0; flippedCards = [];
             document.getElementById('score').innerText = '0';
             document.getElementById('total-pairs').innerText = data.length;
             
@@ -175,7 +193,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
-                card.innerHTML = `<div class="content"><div class="visual-box">${getVisualHTML(item)}</div><span class="word">${item.name}</span></div>`;
+                card.innerHTML = `<div class="content"><div style="display:flex; align-items:center; justify-content:center; flex:1;">${getVisualHTML(item)}</div><span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
@@ -183,7 +201,6 @@
 
         function getVisualHTML(item) {
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
-            if(item.type === 'num') return `<span style="font-size:2rem; font-weight:bold;">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
@@ -196,24 +213,28 @@
         function checkMatch() {
             const [c1, c2] = flippedCards;
             if (c1.dataset.name === c2.dataset.name) {
-                c1.classList.add('matched'); c2.classList.add('matched');
-                matchedPairs++; document.getElementById('score').innerText = matchedPairs;
-                flippedCards = []; canFlip = true;
-                if (matchedPairs === categories[currentCatKey].length) { clearInterval(timerInterval); setTimeout(showWin, 600); }
-            } else { setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 800); }
+                setTimeout(() => {
+                    c1.classList.add('matched'); c2.classList.add('matched');
+                    matchedPairs++; document.getElementById('score').innerText = matchedPairs;
+                    flippedCards = []; canFlip = true;
+                    if (matchedPairs === categories[currentCatKey].length) showWin();
+                }, 400);
+            } else { 
+                setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 800); 
+            }
         }
 
         function showWin() {
             const table = document.getElementById('vocab-table');
             table.innerHTML = '';
             categories[currentCatKey].forEach(item => {
-                table.innerHTML += `<tr><td style="width:40px">${getVisualHTML(item)}</td><td class="eng-col" onclick="speak('${item.name}')">${item.name} 🔊</td><td class="heb-col">${item.heb}</td></tr>`;
+                table.innerHTML += `<tr><td style="width:50px">${getVisualHTML(item)}</td><td class="eng-col" onclick="speak('${item.name}')">${item.name} 🔊</td><td class="heb-col">${item.heb}</td></tr>`;
             });
             document.getElementById('win-overlay').style.display = 'flex';
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
 
-        function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); canFlip = true; timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000); }
+        function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); canFlip = true; }
     </script>
 </body>
 </html>
