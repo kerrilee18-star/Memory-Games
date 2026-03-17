@@ -10,7 +10,6 @@
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* The specific fix for jumping/zooming */
         html, body { 
             overflow: hidden; height: 100%; width: 100%; 
             position: fixed; margin: 0; padding: 0; 
@@ -25,7 +24,7 @@
             display: grid; gap: 8px; width: 100%; 
             grid-template-columns: repeat(4, 1fr);
             justify-items: center; align-content: start;
-            touch-action: none; /* Stops the tablet zoom/jump */
+            touch-action: none; 
         }
 
         .card { 
@@ -118,7 +117,7 @@
             ],
             colors: [
                 {name:'blue', heb:'כָּחֹל', val:'#0984e3', type:'color'}, {name:'red', heb:'אָדֹם', val:'#d63031', type:'color'}, {name:'green', heb:'יָרֹק', val:'#27ae60', type:'color'}, 
-                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#4b2c20', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
+                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#8B4513', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
             ],
             animals: [{name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'}, {name:'rabbit', heb:'אַרְנָב', val:'🐰'}],
             school: [{name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'}, {name:'ruler', heb:'סַרְגֵּל', val:'📏'}]
