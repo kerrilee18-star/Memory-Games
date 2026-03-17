@@ -8,47 +8,53 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
+        
+        /* Strict Zoom/Jump Prevention */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+        }
+        
+        html, body { 
+            overflow: hidden; 
+            height: 100%; 
+            width: 100%; 
+            position: fixed; 
+            margin: 0; 
+            padding: 0; 
+        }
+
         body { font-family: 'Andika', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
-        .screen { width: 100%; max-width: 500px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
+        .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
         
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px; background: white; border-radius: 15px; margin-bottom: 10px; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         
+        /* Table/Tablet Fix: Prevent board from jumping */
         #game-board { 
             display: grid; 
             gap: 8px; 
             width: 100%; 
-            max-height: 70vh;
+            max-height: 72vh;
             grid-template-columns: repeat(4, 1fr);
             justify-items: center;
             align-content: start;
+            touch-action: none; 
         }
 
         .card { 
-            width: 100%; 
-            aspect-ratio: 1/1; 
+            width: 100%; aspect-ratio: 1/1; 
             background: var(--card-back); 
             border-radius: 10px; 
             cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: transform 0.4s; 
-            position: relative; 
-            transform-style: preserve-3d;
+            display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s; position: relative; transform-style: preserve-3d;
         }
 
         .card .content { 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            width: 100%; 
-            height: 100%;
-            pointer-events: none; 
-            padding: 2px;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; pointer-events: none; padding: 2px;
         }
 
         .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
@@ -57,59 +63,41 @@
 
         .visual-box { flex: 1.2; display: flex; align-items: center; justify-content: center; min-height: 0; width: 100%; }
         .emoji { font-size: clamp(1.6rem, 10vw, 2.5rem); line-height: 1; }
-        
-        /* Larger Lowercase Tile Text */
-        .word { 
-            font-size: clamp(0.85rem, 4vw, 1.1rem); 
-            font-weight: 400; 
-            color: #2d3436; 
-            text-transform: lowercase; 
-            margin-bottom: 4px;
-            white-space: nowrap;
-        }
+        .word { font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 400; color: #2d3436; text-transform: lowercase; margin-bottom: 4px; }
 
         .color-swatch { width: 55%; aspect-ratio: 1/1; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
-        .shape-draw { width: 50%; aspect-ratio: 1/1; }
-        .shape-circle { border-radius: 50%; }
-        .shape-rectangle { width: 65%; aspect-ratio: 1.6/1; }
-        .shape-triangle { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 32px solid black; background: none !important; }
-        .shape-oval { width: 65%; aspect-ratio: 1.5/1; border-radius: 50%; }
-
-        /* Review Styles */
         .vocab-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .vocab-list td { padding: 10px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .vocab-list td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .eng-col { text-align: left; color: var(--primary); font-size: 1.1rem; cursor: pointer; }
         .heb-col { text-align: right; font-size: 1.2rem; }
-        .audio-icon { margin-left: 5px; font-size: 0.9rem; }
 
-        /* Menu / UI */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 95%; }
-        .lvl-btn { padding: 18px 5px; border: none; border-radius: 15px; background: white; font-family: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 95%; overflow-y: auto; padding-bottom: 20px; }
+        .lvl-btn { padding: 15px 5px; border: none; border-radius: 12px; background: white; font-family: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; }
         .stats { display: flex; gap: 6px; }
         .stat-box { background: #f8f9fa; padding: 4px 8px; border-radius: 10px; min-width: 60px; }
         .stat-label { font-size: 0.5rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+        .stat-value { font-size: 0.8rem; font-weight: 800; color: var(--primary); }
         
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; font-size: 1.1rem; margin-top: 12px; font-family: inherit; cursor: pointer; }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; font-size: 1.1rem; margin-top: 10px; font-family: inherit; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="main-menu" class="screen">
-        <h1 style="margin-bottom:10px;">🧠 Memory Game</h1>
-        <div style="background:white; padding:15px; border-radius:20px; width:95%; margin-bottom:20px; border-top: 4px solid var(--primary);">
-            <p style="margin:5px 0; font-size:1.1rem;">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
-        </div>
+        <h1 style="margin: 10px 0;">🧠 Memory Game</h1>
         <div class="menu-grid">
-            <button class="lvl-btn" onclick="startGame('Animals / חַיּוֹת', 'animals')"><b style="color:var(--primary); font-size:1.2rem;">Animals</b><br>חַיּוֹת</button>
-            <button class="lvl-btn" onclick="startGame('Shapes / צוּרוֹת', 'shapes')"><b style="color:var(--primary); font-size:1.2rem;">Shapes</b><br>צוּרוֹת</button>
-            <button class="lvl-btn" onclick="startGame('School / בֵּית סֵפֶר', 'school')"><b style="color:var(--primary); font-size:1.2rem;">School</b><br>בֵּית סֵפֶר</button>
-            <button class="lvl-btn" onclick="startGame('Colors / צְבָעִים', 'colors')"><b style="color:var(--primary); font-size:1.2rem;">Colors</b><br>צְבָעִים</button>
-            <button class="lvl-btn" onclick="startGame('Numbers / מִסְפָּרִים', 'numbers')"><b style="color:var(--primary); font-size:1.2rem;">Numbers</b><br>מִסְפָּרִים</button>
+            <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b style="color:var(--primary)">Animals</b><br>חַיּוֹת</button>
+            <button class="lvl-btn" onclick="startGame('Colors', 'colors')"><b style="color:var(--primary)">Colors</b><br>צְבָעִים</button>
+            <button class="lvl-btn" onclick="startGame('Emotions', 'emotions')"><b style="color:var(--primary)">Emotions</b><br>רְגָשׁוֹת</button>
+            <button class="lvl-btn" onclick="startGame('Sport', 'sport')"><b style="color:var(--primary)">Sport</b><br>סְפּוֹרְט</button>
+            <button class="lvl-btn" onclick="startGame('Body Parts', 'body')"><b style="color:var(--primary)">Body Parts</b><br>חלקי גוף</button>
+            <button class="lvl-btn" onclick="startGame('School', 'school')"><b style="color:var(--primary)">School</b><br>בֵּית סֵפֶר</button>
+            <button class="lvl-btn" onclick="startGame('Numbers', 'numbers')"><b style="color:var(--primary)">Numbers</b><br>מִסְפָּרִים</button>
+            <button class="lvl-btn" onclick="startGame('Shapes', 'shapes')"><b style="color:var(--primary)">Shapes</b><br>צוּרוֹת</button>
         </div>
     </div>
 
@@ -117,8 +105,8 @@
         <div id="game-header">
             <button style="border:none; padding:8px 12px; border-radius:12px; font-family:inherit; font-size:0.7rem; font-weight:bold; background:#edf2f7;" onclick="location.reload()">MENU<br>תַּפְרִיט</button>
             <div class="stats">
-                <div class="stat-box"><span class="stat-label">TIME / זְמַן</span><span id="timer" class="stat-value">0</span></div>
-                <div class="stat-box"><span class="stat-label">SCORE / נִקּוּד</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
+                <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-value">0</span></div>
+                <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
             </div>
             <button id="mute-toggle" style="border:none; background:none; font-size:1.4rem; cursor:pointer;" onclick="toggleMute()">🔊</button>
         </div>
@@ -127,15 +115,8 @@
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h1 style="color: var(--secondary); margin:0;">Congratulations!</h1>
-            <h2 style="margin:0 0 10px 0;">כָּל הַכָּבוֹד!</h2>
-            <p style="font-size:1.1rem;">Time: <b><span id="final-time">0</span>s</b> / זְמַן: <b><span id="final-time-heb">0</span> שְׁנִיּוֹת</b></p>
-            
-            <div id="review-area" style="border-top:2px solid var(--primary); margin-top:15px;">
-                <h3 style="margin:10px 0 5px 0;">Vocabulary / אוֹצַר מִלִּים</h3>
-                <table class="vocab-list" id="vocab-table"></table>
-            </div>
-
+            <h1 style="color: var(--secondary); margin:0;">Well Done! כָּל הַכָּבוֹד!</h1>
+            <table class="vocab-list" id="vocab-table"></table>
             <button class="primary-btn" onclick="resetGame()">Play Again / שַׂחֲקוּ שׁוּב</button>
             <button class="primary-btn" style="background:#edf2f7; color:#4a5568;" onclick="location.reload()">Main Menu / תַּפְרִיט רָאשִׁי</button>
         </div>
@@ -143,34 +124,28 @@
 
     <script>
         const categories = {
-            animals: [
-                {name:'dog', heb:'כֶּלֶב', val:'🐶', type:'emoji'}, {name:'cat', heb:'חָתוּל', val:'🐱', type:'emoji'}, {name:'mouse', heb:'עַכְבָּר', val:'🐭', type:'emoji'}, 
-                {name:'rabbit', heb:'אַרְנָב', val:'🐰', type:'emoji'}, {name:'lion', heb:'אַרְיֵה', val:'🦁', type:'emoji'}, {name:'cow', heb:'פָּרָה', val:'🐮', type:'emoji'}, 
-                {name:'penguin', heb:'פִּינְגְּוִין', val:'🐧', type:'emoji'}, {name:'frog', heb:'צְפַרְדֵּעַ', val:'🐸', type:'emoji'}, {name:'monkey', heb:'קוֹף', val:'🐵', type:'emoji'}, 
-                {name:'tiger', heb:'נָמֵר', val:'🐯', type:'emoji'}
+            emotions: [
+                {name:'happy', heb:'שָׂמֵחַ', val:'😊'}, {name:'sad', heb:'עָצוּב', val:'😢'}, {name:'excited', heb:'נִרְגָּשׁ', val:'🤩'}, 
+                {name:'tired', heb:'עָיֵף', val:'😴'}, {name:'sick', heb:'חוֹלֶה', val:'🤒'}, {name:'scared', heb:'מְפֻחָד', val:'😨'}, 
+                {name:'angry', heb:'כּוֹעֵס', val:'😠'}, {name:'silly', heb:'מְטֻפָּשׁ', val:'🤪'}
             ],
-            shapes: [
-                {name:'circle', heb:'עִגּוּל', val:'shape-circle', type:'shape', color:'#e74c3c'}, {name:'square', heb:'רִבּוּעַ', val:'shape-square', type:'shape', color:'#3498db'}, 
-                {name:'star', heb:'כּוֹכָב', val:'★', type:'text-shape', color:'#f1c40f'}, {name:'heart', heb:'לֵב', val:'♥', type:'text-shape', color:'#fd79a8'}, 
-                {name:'diamond', heb:'מְעֻיָּן', val:'◆', type:'text-shape', color:'#9b59b6'}, {name:'rectangle', heb:'מַלְבֵּן', val:'shape-rectangle', type:'shape', color:'#2ecc71'}, 
-                {name:'triangle', heb:'מְשֻׁלָּשׁ', val:'shape-triangle', type:'shape', color:'#e67e22'}, {name:'oval', heb:'אֵלִיפְּסָה', val:'shape-oval', type:'shape', color:'#7f8c8d'}
+            sport: [
+                {name:'baseball', heb:'בֵּיְסְבּוֹל', val:'⚾'}, {name:'basketball', heb:'כַּדורְסַל', val:'🏀'}, {name:'soccer', heb:'כַּדורֶגֶל', val:'⚽'}, 
+                {name:'football', heb:'פּוּטְבּוֹל', val:'🏈'}, {name:'tennis', heb:'טֶנִיס', val:'🎾'}, {name:'ping pong', heb:'פִּינְג פּוֹנְג', val:'🏓'}
             ],
-            school: [
-                {name:'crayon', heb:'צֶבַע', val:'🖍️', type:'emoji'}, {name:'pencil', heb:'עִפָּרוֹן', val:'✏️', type:'emoji'}, {name:'pen', heb:'עֵט', val:'🖊️', type:'emoji'}, 
-                {name:'scissors', heb:'מִסְפָּרַיִם', val:'✂️', type:'emoji'}, {name:'ruler', heb:'סַרְגֵּל', val:'📏', type:'emoji'}, {name:'book', heb:'סֵפֶר', val:'📖', type:'emoji'}, 
-                {name:'notebook', heb:'מַחְבֶּרֶת', val:'📓', type:'emoji'}, {name:'school bag', heb:'יַלְקוּט', val:'🎒', type:'emoji'}
+            body: [
+                {name:'eyes', heb:'עֵינַיִם', val:'👀'}, {name:'ears', heb:'אָזְנַיִם', val:'👂'}, {name:'nose', heb:'אַף', val:'👃'}, 
+                {name:'hands', heb:'יָדַיִם', val:'🙌'}, {name:'feet', heb:'כַּפּוֹת רַגְלַיִם', val:'🦶'}, {name:'legs', heb:'רַגְלַיִם', val:'🦵'}, 
+                {name:'arms', heb:'זְרוֹעוֹת', val:'💪'}, {name:'tooth', heb:'שֵׁן', val:'🦷'}, {name:'tongue', heb:'לָשׁוֹן', val:'👅'}, {name:'brain', heb:'מוֹחַ', val:'🧠'}
             ],
             colors: [
                 {name:'blue', heb:'כָּחֹל', val:'#0984e3', type:'color'}, {name:'red', heb:'אָדֹם', val:'#d63031', type:'color'}, {name:'green', heb:'יָרֹק', val:'#27ae60', type:'color'}, 
-                {name:'orange', heb:'כָּתֹם', val:'#e67e22', type:'color'}, {name:'pink', heb:'וָרֹד', val:'#fd79a8', type:'color'}, {name:'purple', heb:'סָגֹל', val:'#6c5ce7', type:'color'}, 
-                {name:'black', heb:'שָׁחֹר', val:'#2d3436', type:'color'}, {name:'white', heb:'לָבָן', val:'#ffffff', type:'color'}, {name:'gray', heb:'אָפֹר', val:'#7f8c8d', type:'color'}, 
-                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#CD853F', type:'color'}, {name:'gold', heb:'זָהָב', val:'gold-metallic', type:'special-color'}
+                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#5D4037', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
             ],
-            numbers: [
-                {name:'one', heb:'אַחַת', val:'1', type:'num'}, {name:'two', heb:'שְׁתַּיִם', val:'2', type:'num'}, {name:'three', heb:'שָׁלוֹשׁ', val:'3', type:'num'}, {name:'four', heb:'אַרְבַּע', val:'4', type:'num'}, 
-                {name:'five', heb:'חָמֵשׁ', val:'5', type:'num'}, {name:'six', heb:'שֵׁשׁ', val:'6', type:'num'}, {name:'seven', heb:'שֶׁבַע', val:'7', type:'num'}, {name:'eight', heb:'שְׁמוֹנֶה', val:'8', type:'num'},
-                {name:'nine', heb:'תֵּשַׁע', val:'9', type:'num'}, {name:'ten', heb:'עֶשֶׂר', val:'10', type:'num'}
-            ]
+            animals: [{name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'}],
+            school: [{name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'}],
+            numbers: [{name:'one', heb:'אַחַת', val:'1', type:'num'}, {name:'two', heb:'שְׁתַּיִם', val:'2', type:'num'}],
+            shapes: [{name:'circle', heb:'עִגּוּל', val:'shape-circle', type:'shape', color:'#e74c3c'}]
         };
 
         let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
@@ -208,10 +183,7 @@
 
         function getVisualHTML(item) {
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
-            if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
-            if(item.type === 'shape') return `<div class="shape-draw ${item.val}" style="${item.val === 'shape-triangle' ? 'border-bottom-color:'+item.color : 'background:'+item.color}"></div>`;
-            if(item.type === 'text-shape') return `<span style="font-size:2rem; color:${item.color}">${item.val}</span>`;
-            if(item.type === 'num') return `<span style="font-size:2rem; font-weight:bold; color:#333;">${item.val}</span>`;
+            if(item.type === 'num') return `<span style="font-size:2rem; font-weight:bold;">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
@@ -235,14 +207,8 @@
             const table = document.getElementById('vocab-table');
             table.innerHTML = '';
             categories[currentCatKey].forEach(item => {
-                table.innerHTML += `<tr>
-                    <td style="width:45px"><div style="display:flex; justify-content:center;">${getVisualHTML(item)}</div></td>
-                    <td class="eng-col" onclick="speak('${item.name}')">${item.name}<span class="audio-icon">🔊</span></td>
-                    <td class="heb-col">${item.heb}</td>
-                </tr>`;
+                table.innerHTML += `<tr><td style="width:40px">${getVisualHTML(item)}</td><td class="eng-col" onclick="speak('${item.name}')">${item.name} 🔊</td><td class="heb-col">${item.heb}</td></tr>`;
             });
-            document.getElementById('final-time').innerText = seconds;
-            document.getElementById('final-time-heb').innerText = seconds;
             document.getElementById('win-overlay').style.display = 'flex';
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
