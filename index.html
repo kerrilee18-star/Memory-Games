@@ -9,11 +9,12 @@
     <style>
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
         body { background-color: var(--bg); font-family: 'Andika', sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
         
-        .screen { width: 100%; max-width: 600px; text-align: center; }
-        
+        #game-container { width: 100%; max-width: 600px; text-align: center; }
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .instruction { margin-bottom: 25px; color: #444; }
+
         #game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; }
         
         #game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
@@ -41,15 +42,14 @@
         .vocab-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         .vocab-table td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .speaker-btn { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1rem; }
-
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="main-menu" class="screen">
-        <h1 style="color:var(--primary); margin-top: 0;">🧠 Memory Game</h1>
-        <p style="margin-bottom: 25px;">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
+    <div id="main-menu" class="screen" style="width:100%; max-width:600px; text-align:center;">
+        <h1>🧠 Memory Game</h1>
+        <p class="instruction">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
         <div class="menu-grid">
             <button class="lvl-btn" onclick="startGame('emotions')"><b>Emotions</b><br>רְגָשׁוֹת</button>
             <button class="lvl-btn" onclick="startGame('sport')"><b>Sport</b><br>סְפּוֹרְט</button>
@@ -60,13 +60,13 @@
         </div>
     </div>
 
-    <div id="game-screen" class="screen" style="display:none;">
+    <div id="game-screen" class="screen" style="display:none; width:100%; max-width:600px; text-align:center;">
         <div id="game-header">
-            <button style="border:none; padding:10px; border-radius:10px; cursor:pointer;" onclick="location.reload()">MENU</button>
-            <button style="border:none; padding:10px; border-radius:10px; background:#fff3bf; cursor:pointer;" onclick="showHint()">HINT</button>
+            <button onclick="location.reload()">MENU</button>
+            <button style="background:#fff3bf;" onclick="showHint()">HINT</button>
             <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-val">0</span></div>
             <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-val"><span id="score">0</span>/<span id="total">0</span></span></div>
-            <button id="mute-btn" style="border:none; background:none; font-size:1.5rem; cursor:pointer;" onclick="toggleMute()">🔊</button>
+            <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; font-size:1.5rem;">🔊</button>
         </div>
         <div id="game-board"></div>
     </div>
@@ -85,7 +85,7 @@
             emotions: [{en:'happy', hb:'שָׂמֵחַ', val:'😀'}, {en:'excited', hb:'נִרְגָּשׁ', val:'😆'}, {en:'sad', hb:'עָצוּב', val:'☹️'}, {en:'tired', hb:'עָיֵף', val:'🥱'}, {en:'sick', hb:'חוֹלֶה', val:'🤒'}, {en:'angry', hb:'כּוֹעֵס', val:'😡'}, {en:'scared', hb:'מְפֻחָד', val:'😳'}, {en:'surprised', hb:'מֻפְתָּע', val:'😧'}],
             sport: [{en:'baseball', hb:'בֵּיְסְבּוֹל', val:'⚾'}, {en:'basketball', hb:'כַּדּוּרְסַל', val:'🏀'}, {en:'soccer', hb:'כַּדּוּרֶגֶל', val:'⚽'}, {en:'football', hb:'פּוּטְבּוֹל', val:'🏈'}, {en:'tennis', hb:'טֶנִיס', val:'🎾'}, {en:'ping pong', hb:'פִּינְג פּוֹנְג', val:'🏓'}],
             body: [{en:'eyes', hb:'עֵינַיִם', val:'👀'}, {en:'ears', hb:'אָזְנַיִם', val:'👂'}, {en:'nose', hb:'אַף', val:'👃'}, {en:'hands', hb:'יָדַיִם', val:'🙌'}, {en:'feet', hb:'כַּפּוֹת רַגְלַיִם', val:'🦶'}, {en:'legs', hb:'רַגְלַיִם', val:'🦵'}, {en:'arms', hb:'זְרוֹעוֹת', val:'💪'}, {en:'tooth', hb:'שֵׁן', val:'🦷'}, {en:'tongue', hb:'לָשׁוֹן', val:'👅'}, {en:'brain', hb:'מוֹחַ', val:'🧠'}],
-            colors: [{en:'blue', hb:'כָּחֹל', val:'#0984e3', type:'color'}, {en:'red', hb:'אָדֹם', val:'#d63031', type:'color'}, {en:'green', hb:'יָרֹק', val:'#27ae60', type:'color'}, {en:'yellow', hb:'צָהֹב', val:'#f1c40f', type:'color'}, {en:'brown', hb:'חוּם', val:'#964B00', type:'color'}, {en:'black', hb:'שָׁחֹר', val:'#000000', type:'color'}],
+            colors: [{en:'blue', hb:'כָּחֹל', val:'#0984e3', type:'color'}, {en:'red', hb:'אָדֹם', val:'#d63031', type:'color'}, {en:'green', hb:'יָרֹק', val:'#27ae60', type:'color'}, {en:'yellow', hb:'צָהֹב', val:'#f1c40f', type:'color'}, {en:'brown', hb:'#964B00', type:'color'}, {en:'black', hb:'שָׁחֹר', val:'#000000', type:'color'}],
             animals: [{en:'dog', hb:'כֶּלֶב', val:'🐶'}, {en:'cat', hb:'חָתוּל', val:'🐱'}, {en:'lion', hb:'אַרְיֵה', val:'🦁'}, {en:'cow', hb:'פָּרָה', val:'🐮'}, {en:'rabbit', hb:'אַרְנָב', val:'🐰'}],
             school: [{en:'pencil', hb:'עִפָּרוֹן', val:'✏️'}, {en:'book', hb:'סֵפֶר', val:'📖'}, {en:'bag', hb:'יַלְקוּט', val:'🎒'}, {en:'ruler', hb:'סַרְגֵּל', val:'📏'}]
         };
