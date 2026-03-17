@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESL Memory Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Andika&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -10,92 +10,81 @@
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        html, body { 
-            overflow: hidden; height: 100%; width: 100%; 
-            position: fixed; margin: 0; padding: 0; 
-            background-color: var(--bg); font-family: 'Andika', sans-serif;
-        }
+        body { background-color: var(--bg); font-family: 'Andika', sans-serif; margin: 0; padding: 20px; }
 
-        .screen { width: 100%; max-width: 500px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; margin: 0 auto; }
+        .screen { width: 100%; max-width: 600px; margin: 0 auto; text-align: center; }
         
-        #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px; background: white; border-radius: 15px; margin-bottom: 10px; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        #game-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; background: white; padding: 15px; border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
         
         #game-board { 
-            display: grid; gap: 8px; width: 100%; 
-            grid-template-columns: repeat(4, 1fr);
-            justify-items: center; align-content: start;
-            touch-action: none; 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; 
         }
 
         .card { 
-            width: 100%; aspect-ratio: 1/1; background: var(--card-back); 
-            border-radius: 10px; cursor: pointer; display: flex; 
-            align-items: center; justify-content: center; 
+            aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
             transition: transform 0.4s; position: relative; transform-style: preserve-3d;
         }
 
-        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; pointer-events: none; padding: 2px; }
-        .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
+        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
 
-        .emoji { font-size: clamp(1.6rem, 10vw, 2.5rem); line-height: 1; }
-        .word { font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 400; color: #2d3436; text-transform: lowercase; margin-bottom: 4px; }
-        .color-swatch { width: 55%; aspect-ratio: 1/1; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .emoji { font-size: 2.5rem; }
+        .word { font-size: 1rem; color: #2d3436; margin-top: 5px; }
+        .color-swatch { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #ddd; }
 
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 95%; }
-        .lvl-btn { padding: 18px 5px; border: none; border-radius: 15px; background: white; font-family: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .lvl-btn { padding: 20px; border: none; border-radius: 15px; background: white; font-family: inherit; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        .stats { display: flex; gap: 6px; }
-        .stat-box { background: #f8f9fa; padding: 4px 8px; border-radius: 10px; min-width: 60px; }
-        .stat-label { font-size: 0.5rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+        .stat-box { background: #f8f9fa; padding: 5px 10px; border-radius: 8px; text-align: center; }
+        .stat-label { font-size: 0.7rem; display: block; color: #666; font-weight: bold; }
         
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .pop-box { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 800; font-size: 1.1rem; margin-top: 12px; font-family: inherit; cursor: pointer; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
+        .pop-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; margin-top: 15px; cursor: pointer; }
 
-        .vocab-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .vocab-list td { padding: 10px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .vocab-list { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        .vocab-list td { padding: 10px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
     <div id="main-menu" class="screen">
-        <h1 style="margin-bottom:10px;">🧠 Memory Game</h1>
-        <p style="margin-bottom:20px;">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
+        <h1>Great Job!</h1>
+        <p>Choose a category</p>
         <div class="menu-grid">
-            <button class="lvl-btn" onclick="startGame('emotions')"><b style="color:var(--primary)">Emotions</b><br>רְגָשׁוֹת</button>
-            <button class="lvl-btn" onclick="startGame('sport')"><b style="color:var(--primary)">Sport</b><br>סְפּוֹרְט</button>
-            <button class="lvl-btn" onclick="startGame('body')"><b style="color:var(--primary)">Body Parts</b><br>חֶלְקֵי גּוּף</button>
-            <button class="lvl-btn" onclick="startGame('animals')"><b style="color:var(--primary)">Animals</b><br>חַיּוֹת</button>
-            <button class="lvl-btn" onclick="startGame('colors')"><b style="color:var(--primary)">Colors</b><br>צְבָעִים</button>
-            <button class="lvl-btn" onclick="startGame('school')"><b style="color:var(--primary)">School</b><br>בֵּית סֵפֶר</button>
+            <button class="lvl-btn" onclick="startGame('emotions')">Emotions<br>רְגָשׁוֹת</button>
+            <button class="lvl-btn" onclick="startGame('sport')">Sport<br>סְפּוֹרְט</button>
+            <button class="lvl-btn" onclick="startGame('body')">Body Parts<br>חֶלְקֵי גּוּף</button>
+            <button class="lvl-btn" onclick="startGame('animals')">Animals<br>חַיּוֹת</button>
+            <button class="lvl-btn" onclick="startGame('colors')">Colors<br>צְבָעִים</button>
+            <button class="lvl-btn" onclick="startGame('school')">School<br>בֵּית סֵפֶר</button>
         </div>
     </div>
 
     <div id="game-screen" class="screen" style="display:none;">
         <div id="game-header">
-            <button style="border:none; padding:8px 12px; border-radius:12px; font-family:inherit; font-size:0.7rem; font-weight:bold; background:#edf2f7;" onclick="location.reload()">MENU<br>תַּפְרִיט</button>
-            <button style="border:none; padding:8px 12px; border-radius:12px; font-family:inherit; font-size:0.7rem; font-weight:bold; background:#fff3bf; color:#856404;" onclick="showHint()">HINT<br>רֶמֶז</button>
-            <div class="stats">
-                <div class="stat-box"><span class="stat-label">TIME / זְמַן</span><span id="timer" class="stat-value">0</span></div>
-                <div class="stat-box"><span class="stat-label">SCORE / נִקּוּד</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
-            </div>
-            <button id="mute-toggle" style="border:none; background:none; font-size:1.4rem; cursor:pointer;" onclick="toggleMute()">🔊</button>
+            <button onclick="location.reload()">MENU</button>
+            <button onclick="showHint()">HINT</button>
+            <div class="stat-box"><span class="stat-label">TIME</span><span id="timer">0</span></div>
+            <div class="stat-box"><span class="stat-label">SCORE</span><span id="score">0</span>/<span id="total-pairs">0</span></div>
+            <button id="mute-toggle" onclick="toggleMute()">🔊</button>
         </div>
         <div id="game-board"></div>
     </div>
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h1 style="color: var(--secondary); margin:0;">Great Job!</h1>
-            <h2 style="margin:0 0 10px 0;">כָּל הַכָּבוֹד!</h2>
-            <div id="review-area" style="border-top:2px solid var(--primary); margin-top:15px;">
-                <table class="vocab-list" id="vocab-table"></table>
-            </div>
-            <button class="primary-btn" onclick="resetGame()">Play Again / שַׂחֲקוּ שׁוּב</button>
-            <button class="primary-btn" style="background:#edf2f7; color:#4a5568;" onclick="location.reload()">Main Menu / תַּפְרִיט רָאשִׁי</button>
+            <h1 style="color: var(--secondary);">Great Job!</h1>
+            <table class="vocab-list" id="vocab-table"></table>
+            <button class="primary-btn" onclick="resetGame()">Play Again</button>
+            <button class="primary-btn" style="background:#ddd; color:#333;" onclick="location.reload()">Main Menu</button>
         </div>
     </div>
 
@@ -103,8 +92,8 @@
         const categories = {
             emotions: [
                 {name:'happy', heb:'שָׂמֵחַ', val:'😀'}, {name:'excited', heb:'נִרְגָּשׁ', val:'😆'}, {name:'sad', heb:'עָצוּב', val:'☹️'}, 
-                {name:'tired', heb:'עָיֵף', val:'🥱'}, {name:'sick', heb:'חוֹלֶה', val:'🤒'}, {name:'silly', heb:'מְטֻפָּשׁ', val:'🤪'}, 
-                {name:'angry', heb:'כּוֹעֵס', val:'😡'}, {name:'scared', heb:'מְפֻחָד', val:'😳'}, {name:'surprised', heb:'מֻפְתָּע', val:'😧'}
+                {name:'tired', heb:'עָיֵף', val:'🥱'}, {name:'sick', heb:'חוֹלֶה', val:'🤒'}, {name:'angry', heb:'כּוֹעֵס', val:'😡'}, 
+                {name:'scared', heb:'מְפֻחָד', val:'😳'}, {name:'surprised', heb:'מֻפְתָּע', val:'😧'}
             ],
             sport: [
                 {name:'baseball', heb:'בֵּיְסְבּוֹל', val:'⚾'}, {name:'basketball', heb:'כַּדּוּרְסַל', val:'🏀'}, {name:'soccer', heb:'כַּדּוּרֶגֶל', val:'⚽'}, 
@@ -117,10 +106,10 @@
             ],
             colors: [
                 {name:'blue', heb:'כָּחֹל', val:'#0984e3', type:'color'}, {name:'red', heb:'אָדֹם', val:'#d63031', type:'color'}, {name:'green', heb:'יָרֹק', val:'#27ae60', type:'color'}, 
-                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#8B4513', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
+                {name:'yellow', heb:'צָהֹב', val:'#f1c40f', type:'color'}, {name:'brown', heb:'חוּם', val:'#964B00', type:'color'}, {name:'black', heb:'שָׁחֹר', val:'#000000', type:'color'}
             ],
-            animals: [{name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'}, {name:'rabbit', heb:'אַרְנָב', val:'🐰'}],
-            school: [{name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'}, {name:'ruler', heb:'סַרְגֵּל', val:'📏'}]
+            animals: [{name:'dog', heb:'כֶּלֶב', val:'🐶'}, {name:'cat', heb:'חָתוּל', val:'🐱'}, {name:'lion', heb:'אַרְיֵה', val:'🦁'}, {name:'cow', heb:'פָּרָה', val:'🐮'}],
+            school: [{name:'pencil', heb:'עִפָּרוֹן', val:'✏️'}, {name:'book', heb:'סֵפֶר', val:'📖'}, {name:'bag', heb:'יַלְקוּט', val:'🎒'}]
         };
 
         let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
@@ -131,7 +120,7 @@
         function startGame(key) { 
             currentCatKey = key;
             document.getElementById('main-menu').style.display = 'none'; 
-            document.getElementById('game-screen').style.display = 'flex'; 
+            document.getElementById('game-screen').style.display = 'block'; 
             setupBoard();
             canFlip = true;
             timerInterval = setInterval(() => { seconds++; document.getElementById('timer').innerText = seconds; }, 1000);
@@ -149,7 +138,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
-                card.innerHTML = `<div class="content"><div style="flex:1; display:flex; align-items:center;">${getVisualHTML(item)}</div><span class="word">${item.name}</span></div>`;
+                card.innerHTML = `<div class="content"><div>${getVisualHTML(item)}</div><span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
@@ -165,10 +154,7 @@
             canFlip = false;
             const cards = document.querySelectorAll('.card:not(.matched)');
             cards.forEach(c => c.classList.add('flipped'));
-            setTimeout(() => {
-                cards.forEach(c => c.classList.remove('flipped'));
-                canFlip = true;
-            }, 1200);
+            setTimeout(() => { cards.forEach(c => c.classList.remove('flipped')); canFlip = true; }, 1200);
         }
 
         function flipCard(card, name) {
@@ -195,11 +181,7 @@
             const table = document.getElementById('vocab-table');
             table.innerHTML = '';
             categories[currentCatKey].forEach(item => {
-                table.innerHTML += `<tr>
-                    <td style="width:45px">${getVisualHTML(item)}</td>
-                    <td style="text-align:left; color:var(--primary); font-weight:bold;">${item.name}</td>
-                    <td style="text-align:right; font-size:1.2rem;">${item.heb}</td>
-                </tr>`;
+                table.innerHTML += `<tr><td>${getVisualHTML(item)}</td><td style="text-align:left;"><b>${item.name}</b></td><td style="text-align:right;">${item.heb}</td></tr>`;
             });
             document.getElementById('win-overlay').style.display = 'flex';
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
