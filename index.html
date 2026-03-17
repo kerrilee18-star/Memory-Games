@@ -9,6 +9,7 @@
     <style>
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body { background-color: var(--bg); font-family: 'Andika', sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
         
         .screen { width: 100%; max-width: 600px; text-align: center; }
@@ -18,14 +19,14 @@
         #game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
 
         .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; }
-        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
         .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.5; }
 
         .emoji { font-size: 2.5rem; line-height: 1; }
-        .word { font-size: 1rem; color: #2d3436; text-transform: lowercase; margin-top: 5px; }
-        .color-circle { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #ddd; }
+        .word { font-size: 0.9rem; color: #2d3436; text-transform: lowercase; margin-top: 5px; font-weight: bold; }
+        .color-circle { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #ddd; }
 
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
         .lvl-btn { padding: 25px 10px; border: none; border-radius: 15px; background: white; font-family: inherit; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -39,7 +40,7 @@
         
         .vocab-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         .vocab-table td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .speaker-icon { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1rem; }
+        .speaker-btn { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1rem; }
 
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
     </style>
@@ -47,7 +48,8 @@
 <body>
 
     <div id="main-menu" class="screen">
-        <h1 style="color:var(--primary);">Great Job!</h1>
+        <h1 style="color:var(--primary); margin-top: 0;">🧠 Memory Game</h1>
+        <p style="margin-bottom: 25px;">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
         <div class="menu-grid">
             <button class="lvl-btn" onclick="startGame('emotions')"><b>Emotions</b><br>רְגָשׁוֹת</button>
             <button class="lvl-btn" onclick="startGame('sport')"><b>Sport</b><br>סְפּוֹרְט</button>
@@ -71,7 +73,8 @@
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h1 style="color:var(--secondary);">Great Job!</h1>
+            <h1 style="color:var(--secondary); margin: 0;">Great Job!</h1>
+            <p>כָּל הַכָּבוֹד!</p>
             <table class="vocab-table" id="vocab-review"></table>
             <button class="primary-btn" onclick="location.reload()">Play Again</button>
         </div>
@@ -138,8 +141,9 @@
             const table = document.getElementById('vocab-review');
             table.innerHTML = '';
             currentData.forEach(item => {
-                const row = `<tr><td>${item.type === 'color' ? `<div class="color-circle" style="width:30px;height:30px;background:${item.val}"></div>` : item.val}</td><td><b>${item.en}</b></td><td style="text-align:right">${item.hb}</td><td><button class="speaker-icon" onclick="speak('${item.en}')">🔊</button></td></tr>`;
-                table.innerHTML += row;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.type === 'color' ? `<div class="color-circle" style="width:30px;height:30px;background:${item.val}"></div>` : `<span style="font-size:1.5rem">${item.val}</span>`}</td><td><b>${item.en}</b></td><td style="text-align:right">${item.hb}</td><td><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button></td>`;
+                table.appendChild(row);
             });
             document.getElementById('win-overlay').style.display = 'flex';
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
