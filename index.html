@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ESL Memory Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Andika&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -10,62 +10,77 @@
         :root { --primary: #6c5ce7; --secondary: #00b894; --bg: #f0f3f7; --card-back: #3498db; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); font-family: 'Andika', sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
+        .screen { width: 100%; max-width: 600px; text-align: center; }
+        h1 { color: var(--primary); margin: 0 0 5px 0; }
+        .instruction { margin-bottom: 20px; color: #444; font-weight: bold; }
         
-        #game-container { width: 100%; max-width: 600px; text-align: center; }
-        h1 { color: var(--primary); margin-bottom: 5px; }
-        .instruction { margin-bottom: 25px; color: #444; }
-
-        #game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; }
+        /* Menu Styles */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+        .lvl-btn { padding: 18px 5px; border: none; border-radius: 15px; background: white; font-family: inherit; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .lvl-btn b { display: block; font-size: 1.1rem; color: var(--primary); }
         
+        /* Game Board Styles */
+        #game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: white; padding: 12px; border-radius: 15px; width: 100%; }
         #game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
-
         .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; }
-        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-        .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
+        .card .content { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 5px; }
+        .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
-        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.5; }
+        .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.3; }
 
-        .emoji { font-size: 2.5rem; line-height: 1; }
-        .word { font-size: 0.9rem; color: #2d3436; text-transform: lowercase; margin-top: 5px; font-weight: bold; }
-        .color-circle { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #ddd; }
+        /* CSS Shape Icons */
+        .shape-draw { width: 35px; height: 35px; background: var(--primary); }
+        .shape-circle { border-radius: 50%; }
+        .shape-square { border-radius: 4px; }
+        .shape-rect { width: 45px; height: 25px; border-radius: 4px; }
+        .shape-oval { width: 45px; height: 25px; border-radius: 50%; }
+        .shape-triangle { background: none; width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 35px solid var(--primary); }
+        .shape-diamond { transform: rotate(45deg); width: 25px; height: 25px; }
+        .shape-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .shape-heart { background: #ff7675; position: relative; width: 25px; height: 25px; transform: rotate(-45deg); }
+        .shape-heart::before, .shape-heart::after { content: ""; width: 25px; height: 25px; background: #ff7675; border-radius: 50%; position: absolute; }
+        .shape-heart::before { top: -13px; left: 0; }
+        .shape-heart::after { top: 0; left: 13px; }
 
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        .lvl-btn { padding: 25px 10px; border: none; border-radius: 15px; background: white; font-family: inherit; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .emoji { font-size: 2rem; }
+        .word { font-size: 0.8rem; color: #2d3436; text-transform: lowercase; margin-top: 5px; font-weight: bold; }
+        .color-circle { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; }
 
-        .stat-box { background: #f8f9fa; padding: 5px 10px; border-radius: 10px; min-width: 70px; }
-        .stat-label { font-size: 0.6rem; color: #666; display: block; font-weight: bold; }
-        .stat-val { font-size: 1rem; font-weight: bold; color: var(--primary); }
-        
+        /* RESTORED END GAME MODAL */
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-        .pop-box { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: center; }
-        
-        .vocab-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        .vocab-table td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .speaker-btn { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1rem; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
+        .pop-box { background: white; padding: 30px; border-radius: 25px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+        .vocab-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fcfcfc; border-radius: 15px; overflow: hidden; }
+        .vocab-table td { padding: 15px 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .vocab-table tr:last-child td { border-bottom: none; }
+        .vocab-table b { font-size: 1.2rem; color: #2d3436; }
+        .review-hb { font-size: 1.1rem; color: #636e72; }
+        .speak-btn { background: #6c5ce7; color: white; border: none; border-radius: 10px; padding: 8px 12px; cursor: pointer; font-size: 1rem; }
+        .primary-btn { background: var(--secondary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <div id="main-menu" class="screen" style="width:100%; max-width:600px; text-align:center;">
+    <div id="main-menu" class="screen">
         <h1>🧠 Memory Game</h1>
-        <p class="instruction">Choose a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
+        <p class="instruction">Select a category / בַּחֲרוּ קָטֵגוֹרְיָה</p>
         <div class="menu-grid">
-            <button class="lvl-btn" onclick="startGame('emotions')"><b>Emotions</b><br>רְגָשׁוֹת</button>
-            <button class="lvl-btn" onclick="startGame('sport')"><b>Sport</b><br>סְפּוֹרְט</button>
-            <button class="lvl-btn" onclick="startGame('body')"><b>Body Parts</b><br>חֶלְקֵי גּוּף</button>
-            <button class="lvl-btn" onclick="startGame('animals')"><b>Animals</b><br>חַיּוֹת</button>
-            <button class="lvl-btn" onclick="startGame('colors')"><b>Colors</b><br>צְבָעִים</button>
-            <button class="lvl-btn" onclick="startGame('school')"><b>School</b><br>בֵּית סֵפֶר</button>
+            <button class="lvl-btn" onclick="startGame('numbers')"><b>Numbers</b>מִסְפָּרִים</button>
+            <button class="lvl-btn" onclick="startGame('colors')"><b>Colors</b>צְבָעִים</button>
+            <button class="lvl-btn" onclick="startGame('animals')"><b>Animals</b>חַיּוֹת</button>
+            <button class="lvl-btn" onclick="startGame('school')"><b>School</b>בֵּית סֵפֶר</button>
+            <button class="lvl-btn" onclick="startGame('shapes')"><b>Shapes</b>צוּרוֹת</button>
+            <button class="lvl-btn" onclick="startGame('body')"><b>Body Parts</b>חֶלְקֵי גּוּף</button>
+            <button class="lvl-btn" onclick="startGame('emotions')"><b>Emotions</b>רְגָשׁוֹת</button>
+            <button class="lvl-btn" onclick="startGame('sport')"><b>Sport</b>סְפּוֹרְט</button>
         </div>
     </div>
 
-    <div id="game-screen" class="screen" style="display:none; width:100%; max-width:600px; text-align:center;">
+    <div id="game-screen" class="screen" style="display:none;">
         <div id="game-header">
             <button onclick="location.reload()">MENU</button>
-            <button style="background:#fff3bf;" onclick="showHint()">HINT</button>
-            <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-val">0</span></div>
-            <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-val"><span id="score">0</span>/<span id="total">0</span></span></div>
+            <button style="background:#fff3bf; border:none; border-radius:8px; padding:8px 15px;" onclick="showHint()">HINT</button>
+            <div style="font-weight:bold;">Time: <span id="timer">0</span></div>
+            <div style="font-weight:bold;"><span id="score">0</span>/<span id="total">0</span></div>
             <button id="mute-btn" onclick="toggleMute()" style="background:none; border:none; font-size:1.5rem;">🔊</button>
         </div>
         <div id="game-board"></div>
@@ -73,47 +88,80 @@
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h1 style="color:var(--secondary); margin: 0;">Great Job!</h1>
-            <p>כָּל הַכָּבוֹד!</p>
+            <h1 style="color: var(--primary); margin-top:0;">Well Done! כָּל הַכָּבוֹד!</h1>
             <table class="vocab-table" id="vocab-review"></table>
-            <button class="primary-btn" onclick="location.reload()">Play Again</button>
+            <button class="primary-btn" onclick="location.reload()">PLAY AGAIN</button>
         </div>
     </div>
 
     <script>
         const categories = {
-            emotions: [{en:'happy', hb:'שָׂמֵחַ', val:'😀'}, {en:'excited', hb:'נִרְגָּשׁ', val:'😆'}, {en:'sad', hb:'עָצוּב', val:'☹️'}, {en:'tired', hb:'עָיֵף', val:'🥱'}, {en:'sick', hb:'חוֹלֶה', val:'🤒'}, {en:'angry', hb:'כּוֹעֵס', val:'😡'}, {en:'scared', hb:'מְפֻחָד', val:'😳'}, {en:'surprised', hb:'מֻפְתָּע', val:'😧'}],
-            sport: [{en:'baseball', hb:'בֵּיְסְבּוֹל', val:'⚾'}, {en:'basketball', hb:'כַּדּוּרְסַל', val:'🏀'}, {en:'soccer', hb:'כַּדּוּרֶגֶל', val:'⚽'}, {en:'football', hb:'פּוּטְבּוֹל', val:'🏈'}, {en:'tennis', hb:'טֶנִיס', val:'🎾'}, {en:'ping pong', hb:'פִּינְג פּוֹנְג', val:'🏓'}],
-            body: [{en:'eyes', hb:'עֵינַיִם', val:'👀'}, {en:'ears', hb:'אָזְנַיִם', val:'👂'}, {en:'nose', hb:'אַף', val:'👃'}, {en:'hands', hb:'יָדַיִם', val:'🙌'}, {en:'feet', hb:'כַּפּוֹת רַגְלַיִם', val:'🦶'}, {en:'legs', hb:'רַגְלַיִם', val:'🦵'}, {en:'arms', hb:'זְרוֹעוֹת', val:'💪'}, {en:'tooth', hb:'שֵׁן', val:'🦷'}, {en:'tongue', hb:'לָשׁוֹן', val:'👅'}, {en:'brain', hb:'מוֹחַ', val:'🧠'}],
-            colors: [{en:'blue', hb:'כָּחֹל', val:'#0984e3', type:'color'}, {en:'red', hb:'אָדֹם', val:'#d63031', type:'color'}, {en:'green', hb:'יָרֹק', val:'#27ae60', type:'color'}, {en:'yellow', hb:'צָהֹב', val:'#f1c40f', type:'color'}, {en:'brown', hb:'#964B00', type:'color'}, {en:'black', hb:'שָׁחֹר', val:'#000000', type:'color'}],
-            animals: [{en:'dog', hb:'כֶּלֶב', val:'🐶'}, {en:'cat', hb:'חָתוּל', val:'🐱'}, {en:'lion', hb:'אַרְיֵה', val:'🦁'}, {en:'cow', hb:'פָּרָה', val:'🐮'}, {en:'rabbit', hb:'אַרְנָב', val:'🐰'}],
-            school: [{en:'pencil', hb:'עִפָּרוֹן', val:'✏️'}, {en:'book', hb:'סֵפֶר', val:'📖'}, {en:'bag', hb:'יַלְקוּט', val:'🎒'}, {en:'ruler', hb:'סַרְגֵּל', val:'📏'}]
+            numbers: [
+                {en:'one', hb:'אֶחָד', val:'1'}, {en:'two', hb:'שְׁנַיִם', val:'2'}, {en:'three', hb:'שְׁלוֹשָׁה', val:'3'}, {en:'four', hb:'אַרְבָּעָה', val:'4'}, 
+                {en:'five', hb:'חֲמִשָּׁה', val:'5'}, {en:'six', hb:'שִׁשָּׁה', val:'6'}, {en:'seven', hb:'שִׁבְעָה', val:'7'}, {en:'eight', hb:'שְׁמוֹנָה', val:'8'}, 
+                {en:'nine', hb:'תִּשְׁעָה', val:'9'}, {en:'ten', hb:'עֲשָׂרָה', val:'10'}
+            ],
+            colors: [
+                {en:'blue', hb:'כָּחֹל', val:'#0984e3', type:'color'}, {en:'red', hb:'אָדֹם', val:'#d63031', type:'color'}, {en:'green', hb:'יָרֹק', val:'#27ae60', type:'color'}, 
+                {en:'orange', hb:'כָּתֹם', val:'#fd9644', type:'color'}, {en:'pink', hb:'וָרֹד', val:'#fd79a8', type:'color'}, {en:'purple', hb:'סָגֹל', val:'#a29bfe', type:'color'},
+                {en:'black', hb:'שָׁחֹר', val:'#000000', type:'color'}, {en:'white', hb:'לָבָן', val:'#ffffff', type:'color'}, {en:'grey', hb:'אָפֹר', val:'#95a5a6', type:'color'},
+                {en:'gold', hb:'זָהָב', val:'#D4AF37', type:'color'}, {en:'yellow', hb:'צָהֹב', val:'#f1c40f', type:'color'}, {en:'brown', hb:'חוּם', val:'#964B00', type:'color'}
+            ],
+            shapes: [
+                {en:'circle', hb:'עִגּוּל', val:'shape-circle', type:'shape'}, {en:'square', hb:'רִבּוּעַ', val:'shape-square', type:'shape'}, 
+                {en:'star', hb:'כּוֹכָב', val:'shape-star', type:'shape'}, {en:'heart', hb:'לֵב', val:'shape-heart', type:'shape'}, 
+                {en:'diamond', hb:'מְעוּיָן', val:'shape-diamond', type:'shape'}, {en:'rectangle', hb:'מַלְבֵּן', val:'shape-rect', type:'shape'}, 
+                {en:'triangle', hb:'מְשֻׁלָּשׁ', val:'shape-triangle', type:'shape'}, {en:'oval', hb:'אֶלִיפְּסָה', val:'shape-oval', type:'shape'}
+            ],
+            animals: [
+                {en:'dog', hb:'כֶּלֶב', val:'🐶'}, {en:'cat', hb:'חָתוּל', val:'🐱'}, {en:'mouse', hb:'עַכְבָּר', val:'🐭'}, {en:'rabbit', hb:'אַרְנָב', val:'🐰'}, 
+                {en:'lion', hb:'אַרְיֵה', val:'🦁'}, {en:'cow', hb:'פָּרָה', val:'🐮'}, {en:'penguin', hb:'פִּינְגְּוִין', val:'🐧'}, {en:'frog', hb:'צְפַרְדֵּעַ', val:'🐸'}, 
+                {en:'monkey', hb:'קוֹף', val:'🐒'}, {en:'tiger', hb:'נָמֵר', val:'🐯'}
+            ],
+            school: [
+                {en:'crayon', hb:'צִבְעוֹן', val:'🖍️'}, {en:'pencil', hb:'עִפָּרוֹן', val:'✏️'}, {en:'pen', hb:'עֵט', val:'🖊️'}, {en:'scissors', hb:'מִסְפָּרַיִם', val:'✂️'}, 
+                {en:'ruler', hb:'סַרְגֵּל', val:'📏'}, {en:'book', hb:'סֵפֶר', val:'📖'}, {en:'notebook', hb:'מַחְבֶּרֶת', val:'📓'}, {en:'school bag', hb:'יַלְקוּט', val:'🎒'}
+            ],
+            body: [
+                {en:'eyes', hb:'עֵינַיִם', val:'👀'}, {en:'ears', hb:'אָזְנַיִם', val:'👂'}, {en:'nose', hb:'אַף', val:'👃'}, {en:'hands', hb:'יָדַיִם', val:'🙌'}, 
+                {en:'feet', hb:'כַּפּוֹת רַגְלַיִם', val:'🦶'}, {en:'legs', hb:'רַגְלַיִם', val:'🦵'}, {en:'arms', hb:'זְרוֹעוֹת', val:'💪'}, {en:'tooth', hb:'שֵׁן', val:'🦷'}, 
+                {en:'tongue', hb:'לָשׁוֹן', val:'👅'}, {en:'brain', hb:'מוֹחַ', val:'🧠'}
+            ],
+            emotions: [
+                {en:'happy', hb:'שָׂמֵחַ', val:'😀'}, {en:'excited', hb:'נִרְגָּשׁ', val:'😆'}, {en:'sad', hb:'עָצוּב', val:'☹️'}, {en:'tired', hb:'עָיֵף', val:'🥱'}, 
+                {en:'sick', hb:'חוֹלֶה', val:'🤒'}, {en:'angry', hb:'כּוֹעֵס', val:'😡'}, {en:'scared', hb:'מְפֻחָד', val:'😳'}, {en:'surprised', hb:'מֻפְתָּע', val:'😧'}
+            ],
+            sport: [
+                {en:'baseball', hb:'בֵּיְסְבּוֹל', val:'⚾'}, {en:'basketball', hb:'כַּדּוּרְסַל', val:'🏀'}, {en:'soccer', hb:'כַּדּוּרֶגֶל', val:'⚽'}, 
+                {en:'football', hb:'פּוּטְבּוֹל', val:'🏈'}, {en:'tennis', hb:'טֶנִיס', val:'🎾'}, {en:'ping pong', hb:'פִּינְג פּוֹנְג', val:'🏓'}
+            ]
         };
 
         let currentData = [], flipped = [], matches = 0, timer = 0, timerInt, isMuted = false, canFlip = true;
-
         function toggleMute() { isMuted = !isMuted; document.getElementById('mute-btn').innerText = isMuted ? '🔇' : '🔊'; }
-        function speak(t) { window.speechSynthesis.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang = 'en-US'; window.speechSynthesis.speak(m); }
+        function speak(t) { if(isMuted) return; window.speechSynthesis.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang = 'en-US'; window.speechSynthesis.speak(m); }
+
+        function getItemHTML(item) {
+            if (item.type === 'color') return `<div class="color-circle" style="background:${item.val}; margin:auto;"></div>`;
+            if (item.type === 'shape') return `<div class="shape-draw ${item.val}" style="margin:auto;"></div>`;
+            return `<span class="emoji">${item.val}</span>`;
+        }
 
         function startGame(k) {
             currentData = categories[k];
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
-            const board = document.getElementById('game-board');
-            board.innerHTML = '';
-            matches = 0; timer = 0;
+            const board = document.getElementById('game-board'); board.innerHTML = ''; 
+            matches = 0; timer = 0; document.getElementById('score').innerText = '0';
             document.getElementById('total').innerText = currentData.length;
             const gameCards = [...currentData, ...currentData].sort(() => Math.random() - 0.5);
             gameCards.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.name = item.en;
-                card.innerHTML = `<div class="content">${item.type === 'color' ? `<div class="color-circle" style="background:${item.val}"></div>` : `<span class="emoji">${item.val}</span>`}<span class="word">${item.en}</span></div>`;
+                card.className = 'card'; card.dataset.name = item.en;
+                card.innerHTML = `<div class="content">${getItemHTML(item)}<span class="word">${item.en}</span></div>`;
                 card.onclick = () => {
                     if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-                    card.classList.add('flipped');
-                    if (!isMuted) speak(item.en);
-                    flipped.push(card);
+                    card.classList.add('flipped'); speak(item.en); flipped.push(card);
                     if (flipped.length === 2) {
                         canFlip = false;
                         if (flipped[0].dataset.name === flipped[1].dataset.name) {
@@ -129,8 +177,7 @@
         }
 
         function showHint() {
-            if (!canFlip) return;
-            canFlip = false;
+            if (!canFlip) return; canFlip = false;
             const cards = document.querySelectorAll('.card:not(.matched)');
             cards.forEach(c => c.classList.add('flipped'));
             setTimeout(() => { cards.forEach(c => c.classList.remove('flipped')); canFlip = true; }, 1200);
@@ -138,15 +185,18 @@
 
         function endGame() {
             clearInterval(timerInt);
-            const table = document.getElementById('vocab-review');
-            table.innerHTML = '';
+            const table = document.getElementById('vocab-review'); table.innerHTML = '';
             currentData.forEach(item => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${item.type === 'color' ? `<div class="color-circle" style="width:30px;height:30px;background:${item.val}"></div>` : `<span style="font-size:1.5rem">${item.val}</span>`}</td><td><b>${item.en}</b></td><td style="text-align:right">${item.hb}</td><td><button class="speaker-btn" onclick="speak('${item.en}')">🔊</button></td>`;
+                row.innerHTML = `
+                    <td style="width:60px;">${getItemHTML(item)}</td>
+                    <td style="text-align:left;"><b>${item.en}</b></td>
+                    <td style="text-align:right;" class="review-hb">${item.hb}</td>
+                    <td style="width:60px;"><button class="speak-btn" onclick="speak('${item.en}')">🔊</button></td>
+                `;
                 table.appendChild(row);
             });
-            document.getElementById('win-overlay').style.display = 'flex';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            setTimeout(() => { document.getElementById('win-overlay').style.display = 'flex'; confetti(); }, 600);
         }
     </script>
 </body>
