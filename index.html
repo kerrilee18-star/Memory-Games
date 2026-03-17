@@ -39,7 +39,7 @@
         
         .vocab-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         .vocab-table td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .speaker-icon { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; }
+        .speaker-icon { cursor: pointer; background: #eee; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1rem; }
 
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
     </style>
@@ -83,8 +83,8 @@
             sport: [{en:'baseball', hb:'בֵּיְסְבּוֹל', val:'⚾'}, {en:'basketball', hb:'כַּדּוּרְסַל', val:'🏀'}, {en:'soccer', hb:'כַּדּוּרֶגֶל', val:'⚽'}, {en:'football', hb:'פּוּטְבּוֹל', val:'🏈'}, {en:'tennis', hb:'טֶנִיס', val:'🎾'}, {en:'ping pong', hb:'פִּינְג פּוֹנְג', val:'🏓'}],
             body: [{en:'eyes', hb:'עֵינַיִם', val:'👀'}, {en:'ears', hb:'אָזְנַיִם', val:'👂'}, {en:'nose', hb:'אַף', val:'👃'}, {en:'hands', hb:'יָדַיִם', val:'🙌'}, {en:'feet', hb:'כַּפּוֹת רַגְלַיִם', val:'🦶'}, {en:'legs', hb:'רַגְלַיִם', val:'🦵'}, {en:'arms', hb:'זְרוֹעוֹת', val:'💪'}, {en:'tooth', hb:'שֵׁן', val:'🦷'}, {en:'tongue', hb:'לָשׁוֹן', val:'👅'}, {en:'brain', hb:'מוֹחַ', val:'🧠'}],
             colors: [{en:'blue', hb:'כָּחֹל', val:'#0984e3', type:'color'}, {en:'red', hb:'אָדֹם', val:'#d63031', type:'color'}, {en:'green', hb:'יָרֹק', val:'#27ae60', type:'color'}, {en:'yellow', hb:'צָהֹב', val:'#f1c40f', type:'color'}, {en:'brown', hb:'חוּם', val:'#964B00', type:'color'}, {en:'black', hb:'שָׁחֹר', val:'#000000', type:'color'}],
-            animals: [{en:'dog', hb:'כֶּלֶב', val:'🐶'}, {en:'cat', hb:'חָתוּל', val:'🐱'}, {en:'lion', hb:'אַרְיֵה', val:'🦁'}, {en:'cow', hb:'פָּרָה', val:'🐮'}],
-            school: [{en:'pencil', hb:'עִפָּרוֹן', val:'✏️'}, {en:'book', hb:'סֵפֶר', val:'📖'}, {en:'bag', hb:'יַלְקוּט', val:'🎒'}]
+            animals: [{en:'dog', hb:'כֶּלֶב', val:'🐶'}, {en:'cat', hb:'חָתוּל', val:'🐱'}, {en:'lion', hb:'אַרְיֵה', val:'🦁'}, {en:'cow', hb:'פָּרָה', val:'🐮'}, {en:'rabbit', hb:'אַרְנָב', val:'🐰'}],
+            school: [{en:'pencil', hb:'עִפָּרוֹן', val:'✏️'}, {en:'book', hb:'סֵפֶר', val:'📖'}, {en:'bag', hb:'יַלְקוּט', val:'🎒'}, {en:'ruler', hb:'סַרְגֵּל', val:'📏'}]
         };
 
         let currentData = [], flipped = [], matches = 0, timer = 0, timerInt, isMuted = false, canFlip = true;
@@ -107,7 +107,7 @@
                 card.dataset.name = item.en;
                 card.innerHTML = `<div class="content">${item.type === 'color' ? `<div class="color-circle" style="background:${item.val}"></div>` : `<span class="emoji">${item.val}</span>`}<span class="word">${item.en}</span></div>`;
                 card.onclick = () => {
-                    if (!canFlip || card.classList.contains('flipped')) return;
+                    if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) return;
                     card.classList.add('flipped');
                     if (!isMuted) speak(item.en);
                     flipped.push(card);
