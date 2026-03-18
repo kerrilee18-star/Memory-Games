@@ -19,59 +19,59 @@
         body { font-family: 'Andika', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
         .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
-        .instruction-box { background: white; padding: 12px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 5px auto; width: 95%; border-top: 4px solid var(--primary); font-size: 0.95rem; }
+        .instruction-box { background: white; padding: 12px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 5px auto; width: 95%; border-top: 4px solid var(--primary); font-size: 1rem; }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 5px; overflow-y: auto; padding-bottom: 20px; }
         .lvl-btn { padding: 15px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; }
-        .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: lowercase; }
+        .lvl-btn b { color: var(--primary); font-size: 1.2rem; display: block; margin-bottom: 2px; text-transform: lowercase; }
 
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
         .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .color-mode .card { border-radius: 6px; }
-        .color-mode .visual-box { width: 32px; height: 32px; }
-        .color-mode .color-swatch { width: 28px; height: 28px; }
-        .color-mode .word { font-size: 0.6rem; margin-top: 2px; }
+        .color-mode .visual-box { width: 34px; height: 34px; }
+        .color-mode .color-swatch { width: 30px; height: 30px; }
+        .color-mode .word { font-size: 0.65rem; margin-top: 2px; font-weight: 900; }
 
-        .card { aspect-ratio: 1/1.1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
+        .card { aspect-ratio: 1/1.15; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
-        .card.flipped { background: white; transform: rotateY(180deg); border: 2.5px solid var(--primary); }
+        .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
 
-        .emoji { font-size: clamp(1.4rem, 8vw, 2.8rem); }
-        .word { font-size: 0.85rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.6rem, 9vw, 3.2rem); }
+        .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-        .color-swatch { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; }
+        .color-swatch { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
-        .shape-draw { width: 32px; height: 32px; }
+        .shape-draw { width: 36px; height: 36px; }
         .shape-circle { border-radius: 50%; }
         .shape-square { border-radius: 4px; }
-        .shape-rectangle { width: 42px; height: 24px; border-radius: 4px; }
-        .shape-triangle { width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-bottom: 32px solid black; background: none !important; }
-        .shape-oval { width: 42px; height: 26px; border-radius: 50%; }
-        .shape-heart-flat { background: currentColor; clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); width: 32px; height: 32px; }
+        .shape-rectangle { width: 48px; height: 28px; border-radius: 4px; }
+        .shape-triangle { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 36px solid black; background: none !important; }
+        .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
+        .shape-heart-flat { background: currentColor; clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); width: 36px; height: 36px; }
 
         .stats { display: flex; gap: 4px; }
-        .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 55px; text-align: center; }
-        .stat-label { font-size: 0.4rem; color: #718096; display: block; font-weight: bold; }
-        .stat-value { font-size: 0.75rem; color: var(--primary); font-weight: 800; }
+        .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 58px; text-align: center; }
+        .stat-label { font-size: 0.45rem; color: #718096; display: block; font-weight: bold; }
+        .stat-value { font-size: 0.8rem; color: var(--primary); font-weight: 800; }
 
-        .nav-btn { padding: 6px 8px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.6rem; font-family: inherit; }
+        .nav-btn { padding: 8px 10px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.65rem; font-family: inherit; }
         .back-btn { background: #edf2f7; color: #4a5568; }
         .hint-btn { background: #fef3c7; color: #92400e; }
-        .mute-btn { background: #e2e8f0; font-size: 0.9rem; padding: 5px; border-radius: 12px; border: none; cursor: pointer; }
+        .mute-btn { background: #e2e8f0; font-size: 1rem; padding: 5px; border-radius: 12px; border: none; cursor: pointer; }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
         .vocab-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .vocab-table td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .vocab-table b { font-size: 0.95rem; text-transform: lowercase; }
-        .spk-btn { background: #f0edff; border: none; padding: 8px; border-radius: 10px; color: var(--primary); cursor: pointer; }
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
+        .vocab-table td { padding: 10px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
+        .spk-btn { background: #f0edff; border: none; padding: 10px; border-radius: 10px; color: var(--primary); cursor: pointer; }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
     </style>
 </head>
 <body>
@@ -243,7 +243,10 @@
                     clearInterval(timerInterval); 
                     const bestKey = 'best_' + currentCatKey;
                     const lastBest = localStorage.getItem(bestKey);
-                    if (!lastBest || seconds < parseInt(lastBest)) { localStorage.setItem(bestKey, seconds); }
+                    if (!lastBest || seconds < parseInt(lastBest)) { 
+                        localStorage.setItem(bestKey, seconds); 
+                        document.getElementById('best-score').innerText = seconds;
+                    }
                     setTimeout(handleWin, 500); 
                 }
             } else { setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 1000); }
@@ -255,10 +258,10 @@
             categories[currentCatKey].forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="width:40px">${renderVisual(item)}</td>
+                    <td style="width:50px">${renderVisual(item)}</td>
                     <td style="text-align:left"><b>${item.name}</b></td>
                     <td style="text-align:right" dir="rtl">${item.hb}</td>
-                    <td style="width:40px"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
+                    <td style="width:50px"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
                 `;
                 table.appendChild(tr);
             });
