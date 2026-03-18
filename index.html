@@ -27,7 +27,6 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .compact-mode #game-board { gap: 5px; }
         .compact-mode .card { aspect-ratio: 1/1.05; } 
 
@@ -40,25 +39,23 @@
         .emoji { font-size: clamp(1.6rem, 9vw, 3.2rem); }
         .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; }
-        .color-swatch { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
-        .color-mode .visual-box { width: 34px; height: 34px; }
-        .color-mode .color-swatch { width: 30px; height: 30px; }
-        .color-mode .word { font-size: 0.65rem; margin-top: 2px; font-weight: 900; }
-        .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
-
+        .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; position: relative; }
+        
+        /* Shapes */
         .shape-draw { width: 38px; height: 38px; background: currentColor; }
         .shape-circle { border-radius: 50%; }
         .shape-square { border-radius: 0; }
         .shape-rectangle { width: 48px; height: 28px; border-radius: 0; }
         .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
+        .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
         
-        /* Solid Tone Heart Shape */
+        /* Centered Solid Heart */
         .shape-heart-solid { 
             background: currentColor;
-            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
-            width: 40px; height: 40px; transform: scale(1.6);
+            width: 40px; height: 40px;
+            clip-path: path('M20,35.09L18.55,33.77C13.4,29.09,10,26.01,10,22.23C10,19.15,12.42,16.73,15.5,16.73C17.24,16.73,18.91,17.54,20,18.82C21.09,17.54,22.76,16.73,24.5,16.73C27.58,16.73,30,19.15,30,22.23C30,26.01,26.6,29.09,21.45,33.77L20,35.09Z');
+            transform: scale(2.2); 
         }
 
         .stats { display: flex; gap: 4px; }
@@ -74,8 +71,9 @@
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
-        .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin: 15px 0; table-layout: fixed; }
-        .vocab-table td { padding: 12px 4px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        /* Table Spacing */
+        .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 12px; margin: 10px 0; }
+        .vocab-table td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
         .spk-btn { background: #f0edff; border: none; padding: 10px; border-radius: 10px; color: var(--primary); cursor: pointer; }
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
@@ -147,7 +145,7 @@
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
                 {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
                 {name:'heart', val:'shape-heart-solid', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
-                {name:'diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
+                {name:'diamond', val:'shape-diamond', type:'shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
                 {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מַלְבֵּן'}, 
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
                 {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}
@@ -267,10 +265,10 @@
             categories[currentCatKey].data.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="width:50px">${renderVisual(item)}</td>
-                    <td style="text-align:left"><b>${item.name}</b></td>
-                    <td style="text-align:right" dir="rtl">${item.hb}</td>
-                    <td style="width:50px"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
+                    <td style="width:55px; text-align:center;">${renderVisual(item)}</td>
+                    <td style="text-align:left; padding-left:10px;"><b>${item.name}</b></td>
+                    <td style="text-align:right; padding-right:10px;" dir="rtl">${item.hb}</td>
+                    <td style="width:50px; text-align:center;"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
                 `;
                 table.appendChild(tr);
             });
