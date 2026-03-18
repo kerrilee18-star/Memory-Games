@@ -22,15 +22,15 @@
         .instruction-box { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 10px auto; width: 90%; border-top: 4px solid var(--primary); }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; margin-top: 10px; overflow-y: auto; padding-bottom: 20px; }
         .lvl-btn { padding: 20px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; }
-        .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 4px; }
+        .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 4px; text-transform: lowercase; }
 
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 12px; background: white; border-radius: 18px; margin-bottom: 10px; }
-        #game-board { display: grid; gap: 8px; width: 100%; max-height: 75vh; overflow-y: auto; padding: 5px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
+        #game-board { display: grid; gap: 8px; width: 100%; max-height: 78vh; overflow: hidden; padding: 5px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        /* Smaller tiles specifically for the dense Color category */
-        .color-mode #game-board { grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .color-mode .card { border-radius: 8px; }
-        .color-mode .word { font-size: 0.65rem; }
+        .color-mode #game-board { gap: 4px; grid-template-columns: repeat(4, 1fr); }
+        .color-mode .card { border-radius: 6px; }
+        .color-mode .word { font-size: 0.6rem; margin-top: 2px; }
+        .color-mode .color-swatch { width: 28px; height: 28px; }
 
         .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
@@ -38,22 +38,22 @@
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
 
-        .emoji { font-size: clamp(1.4rem, 8vw, 2.8rem); }
-        .word { font-size: 0.75rem; font-weight: 900; margin-top: 5px; text-transform: uppercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.2rem, 7vw, 2.5rem); }
+        .word { font-size: 0.75rem; font-weight: 900; margin-top: 5px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+        .visual-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
         .color-swatch { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         
-        /* Metallic Gradients */
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
         .silver-metallic { background: linear-gradient(135deg, #757575, #e0e0e0, #9e9e9e, #f5f5f5, #757575); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
 
-        .shape-draw { width: 32px; height: 32px; }
+        .shape-draw { width: 30px; height: 30px; }
         .shape-circle { border-radius: 50%; }
         .shape-square { border-radius: 4px; }
-        .shape-rectangle { width: 42px; height: 24px; border-radius: 4px; }
-        .shape-triangle { width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-bottom: 32px solid black; background: none !important; }
-        .shape-oval { width: 42px; height: 26px; border-radius: 50%; }
+        .shape-rectangle { width: 40px; height: 22px; border-radius: 4px; }
+        .shape-triangle { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 30px solid black; background: none !important; }
+        .shape-oval { width: 40px; height: 24px; border-radius: 50%; }
+        .shape-heart-flat { background: currentColor; clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); width: 30px; height: 30px; }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 60px; text-align: center; }
@@ -70,9 +70,8 @@
         
         .vocab-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
         .vocab-table td { padding: 10px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .vocab-table b { font-size: 1rem; color: #333; }
+        .vocab-table b { font-size: 1rem; color: #333; text-transform: lowercase; }
         .spk-btn { background: #f0edff; border: none; padding: 8px; border-radius: 10px; cursor: pointer; color: var(--primary); }
-        
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
     </style>
 </head>
@@ -81,17 +80,18 @@
     <div id="main-menu" class="screen">
         <h1>🧠 Memory Game</h1>
         <div class="instruction-box">
-            <p dir="rtl" style="font-weight: 600; margin:0;">בחר קטגוריה כדי להתחיל!</p>
+            <p style="margin: 0 0 5px 0;">Click the tiles to match the pairs!</p>
+            <p dir="rtl" style="font-weight: 600; margin:0;">לחצו על האריחים כדי להתאים את הזוגות!</p>
         </div>
         <div class="menu-grid">
-            <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b>Animals</b> חיות</button>
-            <button class="lvl-btn" onclick="startGame('Shapes', 'shapes')"><b>Shapes</b> צורות</button>
-            <button class="lvl-btn" onclick="startGame('School', 'school')"><b>School</b> בית ספר</button>
-            <button class="lvl-btn" onclick="startGame('Colors', 'colors')"><b>Colors</b> צבעים</button>
-            <button class="lvl-btn" onclick="startGame('Numbers', 'numbers')"><b>Numbers</b> מספרים</button>
-            <button class="lvl-btn" onclick="startGame('Body Parts', 'body')"><b>Body Parts</b> חלקי גוף</button>
-            <button class="lvl-btn" onclick="startGame('Emotions', 'emotions')"><b>Emotions</b> רגשות</button>
-            <button class="lvl-btn" onclick="startGame('Sport', 'sport')"><b>Sport</b> ספורט</button>
+            <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b>animals</b> חיות</button>
+            <button class="lvl-btn" onclick="startGame('Shapes', 'shapes')"><b>shapes</b> צורות</button>
+            <button class="lvl-btn" onclick="startGame('School', 'school')"><b>school</b> בית ספר</button>
+            <button class="lvl-btn" onclick="startGame('Colors', 'colors')"><b>colors</b> צבעים</button>
+            <button class="lvl-btn" onclick="startGame('Numbers', 'numbers')"><b>numbers</b> מספרים</button>
+            <button class="lvl-btn" onclick="startGame('Body Parts', 'body')"><b>body parts</b> חלקי גוף</button>
+            <button class="lvl-btn" onclick="startGame('Emotions', 'emotions')"><b>emotions</b> רגשות</button>
+            <button class="lvl-btn" onclick="startGame('Sport', 'sport')"><b>sport</b> ספורט</button>
         </div>
     </div>
 
@@ -99,9 +99,9 @@
         <div id="game-header">
             <button class="nav-btn back-btn" onclick="showMenu()">MENU<br>תפריט</button>
             <div class="stats">
-                <div class="stat-box"><span class="stat-label">TIME</span><span id="timer" class="stat-value">0</span></div>
-                <div class="stat-box"><span class="stat-label">BEST</span><span id="best-score" class="stat-value">--</span></div>
-                <div class="stat-box"><span class="stat-label">SCORE</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
+                <div class="stat-box"><span class="stat-label">TIME / זמן</span><span id="timer" class="stat-value">0</span></div>
+                <div class="stat-box"><span class="stat-label">BEST / שיא</span><span id="best-score" class="stat-value">--</span></div>
+                <div class="stat-box"><span class="stat-label">SCORE / ניקוד</span><span class="stat-value"><span id="score">0</span>/<span id="total-pairs">0</span></span></div>
             </div>
             <div style="display:flex; align-items:center;">
                 <button class="nav-btn hint-btn" onclick="useHint()">HINT<br>רמז</button>
@@ -113,7 +113,7 @@
 
     <div id="start-overlay" class="overlay">
         <div class="pop-box">
-            <h2 id="lvl-title">Category</h2>
+            <h2 id="lvl-title">category</h2>
             <p>Ready? / מוכנים?</p>
             <button class="primary-btn" onclick="beginTimer()">START! / התחל!</button>
         </div>
@@ -121,57 +121,57 @@
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h2 style="color: var(--secondary); margin:0;">EXCELLENT!</h2>
+            <h2 style="color: var(--secondary); margin:0;">EXCELLENT! / כל הכבוד!</h2>
             <table class="vocab-table" id="review-table"></table>
-            <button class="primary-btn" style="background:var(--secondary);" onclick="resetGame()">PLAY AGAIN</button>
-            <button class="primary-btn" onclick="showMenu()">BACK TO MENU</button>
+            <button class="primary-btn" style="background:var(--secondary);" onclick="resetGame()">PLAY AGAIN / שחק שוב</button>
+            <button class="primary-btn" onclick="showMenu()">BACK TO MENU / חזרה לתפריט</button>
         </div>
     </div>
 
     <script>
         const categories = {
             animals: [
-                {name:'Dog', val:'🐶', type:'emoji', hb:'כלב'}, {name:'Cat', val:'🐱', type:'emoji', hb:'חתול'}, {name:'Mouse', val:'🐭', type:'emoji', hb:'עכבר'}, {name:'Rabbit', val:'🐰', type:'emoji', hb:'ארנב'}, 
-                {name:'Lion', val:'🦁', type:'emoji', hb:'אריה'}, {name:'Cow', val:'🐮', type:'emoji', hb:'פרה'}, {name:'Penguin', val:'🐧', type:'emoji', hb:'פינגווין'}, {name:'Frog', val:'🐸', type:'emoji', hb:'צפרדע'},
-                {name:'Monkey', val:'🐵', type:'emoji', hb:'קוף'}, {name:'Tiger', val:'🐯', type:'emoji', hb:'נמר'}
+                {name:'dog', val:'🐶', hb:'כלב'}, {name:'cat', val:'🐱', hb:'חתול'}, {name:'mouse', val:'🐭', hb:'עכבר'}, {name:'rabbit', val:'🐰', hb:'ארנב'}, 
+                {name:'lion', val:'🦁', hb:'אריה'}, {name:'cow', val:'🐮', hb:'פרה'}, {name:'penguin', val:'🐧', hb:'פינגווין'}, {name:'frog', val:'🐸', hb:'צפרדע'},
+                {name:'monkey', val:'🐵', hb:'קוף'}, {name:'tiger', val:'🐯', hb:'נמר'}
             ],
             shapes: [
-                {name:'Circle', val:'shape-circle', type:'shape', color:'#e74c3c', hb:'עיגול'}, 
-                {name:'Square', val:'shape-square', type:'shape', color:'#3498db', hb:'ריבוע'}, 
-                {name:'Star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כוכב'}, 
-                {name:'Heart', val:'♥', type:'text-shape', color:'#fd79a8', hb:'לב'}, 
-                {name:'Diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מעוין'}, 
-                {name:'Rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מלבן'}, 
-                {name:'Triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'משולש'}, 
-                {name:'Oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אליפסה'}
+                {name:'circle', val:'shape-circle', type:'shape', color:'#fd79a8', hb:'עיגול'}, 
+                {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'ריבוע'}, 
+                {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כוכב'}, 
+                {name:'heart', val:'shape-heart-flat', type:'shape', color:'#e74c3c', hb:'לב'}, 
+                {name:'diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מעוין'}, 
+                {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מלבן'}, 
+                {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'משולש'}, 
+                {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אליפסה'}
             ],
             school: [
-                {name:'Crayon', val:'🖍️', type:'emoji', hb:'צבעון'}, {name:'Pencil', val:'✏️', type:'emoji', hb:'עיפרון'}, {name:'Pen', val:'🖊️', type:'emoji', hb:'עט'}, {name:'Scissors', val:'✂️', type:'emoji', hb:'מספריים'}, 
-                {name:'Ruler', val:'📏', type:'emoji', hb:'סרגל'}, {name:'Book', val:'📖', type:'emoji', hb:'ספר'}, {name:'Notebook', val:'📓', type:'emoji', hb:'מחברת'}, {name:'School bag', val:'🎒', type:'emoji', hb:'ילקוט'}
+                {name:'crayon', val:'🖍️', hb:'צבעון'}, {name:'pencil', val:'✏️', hb:'עיפרון'}, {name:'pen', val:'🖊️', hb:'עט'}, {name:'scissors', val:'✂️', hb:'מספריים'}, 
+                {name:'ruler', val:'📏', hb:'סרגל'}, {name:'book', val:'📖', hb:'ספר'}, {name:'notebook', val:'📓', hb:'מחברת'}, {name:'school bag', val:'🎒', hb:'ילקוט'}
             ],
             colors: [
-                {name:'Blue', val:'#0984e3', type:'color', hb:'כחול'}, {name:'Red', val:'#d63031', type:'color', hb:'אדום'}, {name:'Green', val:'#27ae60', type:'color', hb:'ירוק'}, {name:'Orange', val:'#e67e22', type:'color', hb:'כתום'}, 
-                {name:'Pink', val:'#fd79a8', type:'color', hb:'ורוד'}, {name:'Purple', val:'#6c5ce7', type:'color', hb:'סגול'}, {name:'Black', val:'#2d3436', type:'color', hb:'שחור'}, {name:'White', val:'#ffffff', type:'color', hb:'לבן'},
-                {name:'Gray', val:'#7f8c8d', type:'color', hb:'אפור'}, {name:'Yellow', val:'#f1c40f', type:'color', hb:'צהוב'}, {name:'Brown', val:'#5d4037', type:'color', hb:'חום'}, 
-                {name:'Gold', val:'gold-metallic', type:'special-color', hb:'זהב'}, {name:'Silver', val:'silver-metallic', type:'special-color', hb:'כסף'}
+                {name:'blue', val:'#0984e3', type:'color', hb:'כחול'}, {name:'red', val:'#d63031', type:'color', hb:'אדום'}, {name:'green', val:'#27ae60', type:'color', hb:'ירוק'}, {name:'orange', val:'#e67e22', type:'color', hb:'כתום'}, 
+                {name:'pink', val:'#fd79a8', type:'color', hb:'ורוד'}, {name:'purple', val:'#6c5ce7', type:'color', hb:'סגול'}, {name:'black', val:'#2d3436', type:'color', hb:'שחור'}, {name:'white', val:'#ffffff', type:'color', hb:'לבן'},
+                {name:'gray', val:'#7f8c8d', type:'color', hb:'אפור'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צהוב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, 
+                {name:'gold', val:'gold-metallic', type:'special-color', hb:'זהב'}, {name:'silver', val:'silver-metallic', type:'special-color', hb:'כסף'}, {name:'turquoise', val:'#40e0d0', type:'color', hb:'טורקיז'}
             ],
             numbers: [
-                {name:'One', val:'1', type:'emoji', hb:'אחד'}, {name:'Two', val:'2', type:'emoji', hb:'שתיים'}, {name:'Three', val:'3', type:'emoji', hb:'שלוש'}, {name:'Four', val:'4', type:'emoji', hb:'ארבע'}, 
-                {name:'Five', val:'5', type:'emoji', hb:'חמש'}, {name:'Six', val:'6', type:'emoji', hb:'שש'}, {name:'Seven', val:'7', type:'emoji', hb:'שבע'}, {name:'Eight', val:'8', type:'emoji', hb:'שמונה'},
-                {name:'Nine', val:'9', type:'emoji', hb:'תשע'}, {name:'Ten', val:'10', type:'emoji', hb:'עשר'}
+                {name:'one', val:'1', hb:'אחד'}, {name:'two', val:'2', hb:'שתיים'}, {name:'three', val:'3', hb:'שלוש'}, {name:'four', val:'4', hb:'ארבע'}, 
+                {name:'five', val:'5', hb:'חמש'}, {name:'six', val:'6', hb:'שש'}, {name:'seven', val:'7', hb:'שבע'}, {name:'eight', val:'8', hb:'שמונה'},
+                {name:'nine', val:'9', hb:'תשע'}, {name:'ten', val:'10', hb:'עשר'}
             ],
             body: [
-                {name:'Eyes', val:'👀', type:'emoji', hb:'עיניים'}, {name:'Ears', val:'👂', type:'emoji', hb:'אוזניים'}, {name:'Nose', val:'👃', type:'emoji', hb:'אף'}, {name:'Hands', val:'🙌', type:'emoji', hb:'ידיים'}, 
-                {name:'Feet', val:'🦶', type:'emoji', hb:'כפות רגליים'}, {name:'Legs', val:'🦵', type:'emoji', hb:'רגליים'}, {name:'Arms', val:'💪', type:'emoji', hb:'זרועות'}, {name:'Tooth', val:'🦷', type:'emoji', hb:'שן'},
-                {name:'Tongue', val:'👅', type:'emoji', hb:'לשון'}, {name:'Brain', val:'🧠', type:'emoji', hb:'מוח'}
+                {name:'eyes', val:'👀', hb:'עיניים'}, {name:'ears', val:'👂', hb:'אוזניים'}, {name:'nose', val:'👃', hb:'אף'}, {name:'hands', val:'🙌', hb:'ידיים'}, 
+                {name:'feet', val:'🦶', hb:'כפות רגליים'}, {name:'legs', val:'🦵', hb:'רגליים'}, {name:'arms', val:'💪', hb:'זרועות'}, {name:'tooth', val:'🦷', hb:'שן'},
+                {name:'tongue', val:'👅', hb:'לשון'}, {name:'brain', val:'🧠', hb:'מוח'}
             ],
             emotions: [
-                {name:'Happy', val:'😀', type:'emoji', hb:'שמח'}, {name:'Sad', val:'😢', type:'emoji', hb:'עצוב'}, {name:'Angry', val:'😡', type:'emoji', hb:'כועס'}, {name:'Tired', val:'🥱', type:'emoji', hb:'עייף'},
-                {name:'Sick', val:'🤒', type:'emoji', hb:'חולה'}, {name:'Excited', val:'🤩', type:'emoji', hb:'נרגש'}, {name:'Scared', val:'😨', type:'emoji', hb:'מפוחד'}, {name:'Surprised', val:'😮', type:'emoji', hb:'מופתע'}
+                {name:'happy', val:'😀', hb:'שמח'}, {name:'sad', val:'😢', hb:'עצוב'}, {name:'angry', val:'😡', hb:'כועס'}, {name:'tired', val:'🥱', hb:'עייף'},
+                {name:'sick', val:'🤒', hb:'חולה'}, {name:'excited', val:'🤩', hb:'נרגש'}, {name:'scared', val:'😨', hb:'מפוחד'}, {name:'surprised', val:'😮', hb:'מופתע'}
             ],
             sport: [
-                {name:'Soccer', val:'⚽', type:'emoji', hb:'כדורגל'}, {name:'Basketball', val:'🏀', type:'emoji', hb:'כדורסל'}, {name:'Tennis', val:'🎾', type:'emoji', hb:'טניס'},
-                {name:'Baseball', val:'⚾', type:'emoji', hb:'בייסבול'}, {name:'Football', val:'🏈', type:'emoji', hb:'פוטבול'}, {name:'Ping Pong', val:'🏓', type:'emoji', hb:'פינג פונג'}
+                {name:'soccer', val:'⚽', hb:'כדורגל'}, {name:'basketball', val:'🏀', hb:'כדורסל'}, {name:'tennis', val:'🎾', hb:'טניס'},
+                {name:'baseball', val:'⚾', hb:'בייסבול'}, {name:'football', val:'🏈', hb:'פוטבול'}, {name:'ping pong', val:'🏓', hb:'פינג פונג'}
             ]
         };
 
@@ -185,20 +185,20 @@
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
             if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
             if(item.type === 'shape') {
-                const style = item.val === 'shape-triangle' ? `border-bottom-color:${item.color}` : `background:${item.color}`;
+                const style = item.val === 'shape-triangle' ? `border-bottom-color:${item.color}` : `background:${item.color}; color:${item.color}`;
                 return `<div class="shape-draw ${item.val}" style="${style}"></div>`;
             }
-            if(item.type === 'text-shape') return `<span style="font-size:2rem; color:${item.color}">${item.val}</span>`;
+            if(item.type === 'text-shape') return `<span style="font-size:1.8rem; color:${item.color}">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
         function startGame(label, key) { 
             currentCatKey = key;
-            const container = document.getElementById('game-screen');
-            container.className = 'screen ' + (key === 'colors' ? 'color-mode' : '');
+            const scr = document.getElementById('game-screen');
+            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '');
             document.getElementById('main-menu').style.display = 'none'; 
-            container.style.display = 'flex'; 
-            document.getElementById('lvl-title').innerText = label;
+            scr.style.display = 'flex'; 
+            document.getElementById('lvl-title').innerText = label.toLowerCase();
             document.getElementById('start-overlay').style.display = 'flex';
             setupBoard();
         }
@@ -246,10 +246,6 @@
         }
 
         function handleWin() {
-            const bestKey = 'best_cat_' + currentCatKey;
-            const prev = localStorage.getItem(bestKey);
-            if(!prev || seconds < prev) { localStorage.setItem(bestKey, seconds); }
-            
             const table = document.getElementById('review-table');
             table.innerHTML = '';
             categories[currentCatKey].forEach(item => {
@@ -262,13 +258,11 @@
                 `;
                 table.appendChild(tr);
             });
-            
             document.getElementById('win-overlay').style.display = 'flex'; 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
         }
 
         function resetGame() { document.getElementById('win-overlay').style.display = 'none'; setupBoard(); beginTimer(); }
-        
         function useHint() {
             if (!canFlip) return;
             seconds += 5; document.getElementById('timer').innerText = seconds;
