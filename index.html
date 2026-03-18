@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Multi-Category Memory Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Andika&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { 
@@ -15,16 +16,21 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
         html, body { overflow: hidden; height: 100%; width: 100%; position: fixed; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Andika', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
         .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 15px 10px; }
         .instruction-box { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 10px auto; width: 90%; border-top: 4px solid var(--primary); }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; margin-top: 10px; overflow-y: auto; padding-bottom: 20px; }
-        .lvl-btn { padding: 20px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; }
+        .lvl-btn { padding: 20px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; }
         .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 4px; }
 
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 12px; background: white; border-radius: 18px; margin-bottom: 10px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 75vh; overflow-y: auto; padding: 5px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
+        
+        /* Smaller tiles specifically for the dense Color category */
+        .color-mode #game-board { grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .color-mode .card { border-radius: 8px; }
+        .color-mode .word { font-size: 0.65rem; }
 
         .card { aspect-ratio: 1/1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
@@ -35,25 +41,26 @@
         .emoji { font-size: clamp(1.4rem, 8vw, 2.8rem); }
         .word { font-size: 0.75rem; font-weight: 900; margin-top: 5px; text-transform: uppercase; color: #2d3436; }
 
-        .visual-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-        .color-swatch { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .visual-box { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+        .color-swatch { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         
+        /* Metallic Gradients */
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+        .silver-metallic { background: linear-gradient(135deg, #757575, #e0e0e0, #9e9e9e, #f5f5f5, #757575); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
 
-        /* Custom Shapes */
-        .shape-draw { width: 35px; height: 35px; }
+        .shape-draw { width: 32px; height: 32px; }
         .shape-circle { border-radius: 50%; }
         .shape-square { border-radius: 4px; }
-        .shape-rectangle { width: 45px; height: 26px; border-radius: 4px; }
-        .shape-triangle { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 35px solid black; background: none !important; }
-        .shape-oval { width: 45px; height: 28px; border-radius: 50%; }
+        .shape-rectangle { width: 42px; height: 24px; border-radius: 4px; }
+        .shape-triangle { width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-bottom: 32px solid black; background: none !important; }
+        .shape-oval { width: 42px; height: 26px; border-radius: 50%; }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 60px; text-align: center; }
         .stat-label { font-size: 0.45rem; color: #718096; display: block; font-weight: bold; }
         .stat-value { font-size: 0.8rem; color: var(--primary); font-weight: 800; }
 
-        .nav-btn { padding: 8px 10px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.65rem; }
+        .nav-btn { padding: 8px 10px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; text-align: center; font-size: 0.65rem; font-family: inherit; }
         .back-btn { background: #edf2f7; color: #4a5568; }
         .hint-btn { background: #fef3c7; color: #92400e; }
         .mute-btn { background: #e2e8f0; font-size: 1rem; padding: 6px; border-radius: 12px; border: none; cursor: pointer; margin-left: 2px; }
@@ -66,7 +73,7 @@
         .vocab-table b { font-size: 1rem; color: #333; }
         .spk-btn { background: #f0edff; border: none; padding: 8px; border-radius: 10px; cursor: pointer; color: var(--primary); }
         
-        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; }
+        .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
     </style>
 </head>
 <body>
@@ -145,7 +152,8 @@
             colors: [
                 {name:'Blue', val:'#0984e3', type:'color', hb:'כחול'}, {name:'Red', val:'#d63031', type:'color', hb:'אדום'}, {name:'Green', val:'#27ae60', type:'color', hb:'ירוק'}, {name:'Orange', val:'#e67e22', type:'color', hb:'כתום'}, 
                 {name:'Pink', val:'#fd79a8', type:'color', hb:'ורוד'}, {name:'Purple', val:'#6c5ce7', type:'color', hb:'סגול'}, {name:'Black', val:'#2d3436', type:'color', hb:'שחור'}, {name:'White', val:'#ffffff', type:'color', hb:'לבן'},
-                {name:'Gray', val:'#7f8c8d', type:'color', hb:'אפור'}, {name:'Yellow', val:'#f1c40f', type:'color', hb:'צהוב'}, {name:'Brown', val:'#5d4037', type:'color', hb:'חום'}, {name:'Gold', val:'gold-metallic', type:'special-color', hb:'זהב'}
+                {name:'Gray', val:'#7f8c8d', type:'color', hb:'אפור'}, {name:'Yellow', val:'#f1c40f', type:'color', hb:'צהוב'}, {name:'Brown', val:'#5d4037', type:'color', hb:'חום'}, 
+                {name:'Gold', val:'gold-metallic', type:'special-color', hb:'זהב'}, {name:'Silver', val:'silver-metallic', type:'special-color', hb:'כסף'}
             ],
             numbers: [
                 {name:'One', val:'1', type:'emoji', hb:'אחד'}, {name:'Two', val:'2', type:'emoji', hb:'שתיים'}, {name:'Three', val:'3', type:'emoji', hb:'שלוש'}, {name:'Four', val:'4', type:'emoji', hb:'ארבע'}, 
@@ -159,7 +167,7 @@
             ],
             emotions: [
                 {name:'Happy', val:'😀', type:'emoji', hb:'שמח'}, {name:'Sad', val:'😢', type:'emoji', hb:'עצוב'}, {name:'Angry', val:'😡', type:'emoji', hb:'כועס'}, {name:'Tired', val:'🥱', type:'emoji', hb:'עייף'},
-                {name:'Sick', val:'🤒', type:'emoji', hb:'חולה'}, {name:'Excited', val:'🤩', type:'emoji', hb:'נרגש'}, {name:'Scared', hb:'מפוחד', val:'😨', type:'emoji'}, {name:'Surprised', hb:'מופתע', val:'😮', type:'emoji'}
+                {name:'Sick', val:'🤒', type:'emoji', hb:'חולה'}, {name:'Excited', val:'🤩', type:'emoji', hb:'נרגש'}, {name:'Scared', val:'😨', type:'emoji', hb:'מפוחד'}, {name:'Surprised', val:'😮', type:'emoji', hb:'מופתע'}
             ],
             sport: [
                 {name:'Soccer', val:'⚽', type:'emoji', hb:'כדורגל'}, {name:'Basketball', val:'🏀', type:'emoji', hb:'כדורסל'}, {name:'Tennis', val:'🎾', type:'emoji', hb:'טניס'},
@@ -186,8 +194,10 @@
 
         function startGame(label, key) { 
             currentCatKey = key;
+            const container = document.getElementById('game-screen');
+            container.className = 'screen ' + (key === 'colors' ? 'color-mode' : '');
             document.getElementById('main-menu').style.display = 'none'; 
-            document.getElementById('game-screen').style.display = 'flex'; 
+            container.style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label;
             document.getElementById('start-overlay').style.display = 'flex';
             setupBoard();
