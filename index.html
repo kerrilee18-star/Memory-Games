@@ -19,7 +19,7 @@
         body { font-family: 'Andika', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; align-items: center; }
 
         .screen { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 10px; }
-        .instruction-box { background: white; padding: 12px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 5px auto; width: 95%; border-top: 4px solid var(--primary); font-size: 0.9rem; }
+        .instruction-box { background: white; padding: 12px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 5px auto; width: 95%; border-top: 4px solid var(--primary); font-size: 0.95rem; }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin-top: 5px; overflow-y: auto; padding-bottom: 20px; }
         .lvl-btn { padding: 15px 10px; border: none; border-radius: 20px; background: white; box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; }
         .lvl-btn b { color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: lowercase; }
@@ -27,15 +27,11 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        /* Optimized Color Grid - 6 columns to prevent cut-off */
-        .color-mode #game-board { 
-            grid-template-columns: repeat(6, 1fr); 
-            gap: 4px; 
-        }
+        .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .color-mode .card { border-radius: 6px; }
-        .color-mode .visual-box { width: 28px; height: 28px; }
-        .color-mode .color-swatch { width: 24px; height: 24px; }
-        .color-mode .word { font-size: 0.55rem; margin-top: 1px; }
+        .color-mode .visual-box { width: 32px; height: 32px; }
+        .color-mode .color-swatch { width: 28px; height: 28px; }
+        .color-mode .word { font-size: 0.6rem; margin-top: 2px; }
 
         .card { aspect-ratio: 1/1.1; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
@@ -43,22 +39,20 @@
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
 
-        .emoji { font-size: clamp(1.1rem, 6vw, 2.2rem); }
-        .word { font-size: 0.7rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.4rem, 8vw, 2.8rem); }
+        .word { font-size: 0.85rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .color-swatch { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
-        
+        .visual-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .color-swatch { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
-        .silver-metallic { background: linear-gradient(135deg, #757575, #e0e0e0, #9e9e9e, #f5f5f5, #757575); }
 
-        .shape-draw { width: 28px; height: 28px; }
+        .shape-draw { width: 32px; height: 32px; }
         .shape-circle { border-radius: 50%; }
         .shape-square { border-radius: 4px; }
-        .shape-rectangle { width: 38px; height: 20px; border-radius: 4px; }
-        .shape-triangle { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 28px solid black; background: none !important; }
-        .shape-oval { width: 38px; height: 22px; border-radius: 50%; }
-        .shape-heart-flat { background: currentColor; clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); width: 28px; height: 28px; }
+        .shape-rectangle { width: 42px; height: 24px; border-radius: 4px; }
+        .shape-triangle { width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-bottom: 32px solid black; background: none !important; }
+        .shape-oval { width: 42px; height: 26px; border-radius: 50%; }
+        .shape-heart-flat { background: currentColor; clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); width: 32px; height: 32px; }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 55px; text-align: center; }
@@ -86,7 +80,7 @@
         <h1>🧠 Memory Game</h1>
         <div class="instruction-box">
             <p style="margin: 0 0 5px 0;">Click the tiles to match the pairs!<br>How fast can you find all the pairs?</p>
-            <p dir="rtl" style="font-weight: 600; margin:0;">לַחֲצוּ עַל הָאֲרִיחִים כְּדֵי לְהַתְאִים אֶת הַזּוּגוֹת!</p>
+            <p dir="rtl" style="font-weight: 600; margin:0;">לַחֲצוּ עַל הָאֲרִיחִים כְּדֵי לְהַתְאִים אֶת הַזּוּגוֹת!<br>כַּמָּה מַהֵר תּוּכְלוּ לִמְצֹא אֶת כָּל הַזּוּגוֹת?</p>
         </div>
         <div class="menu-grid">
             <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b>animals</b> חַיּוֹת</button>
@@ -157,8 +151,7 @@
             colors: [
                 {name:'blue', val:'#0984e3', type:'color', hb:'כָּחֹל'}, {name:'red', val:'#d63031', type:'color', hb:'אָדֹם'}, {name:'green', val:'#27ae60', type:'color', hb:'יָרֹק'}, {name:'orange', val:'#e67e22', type:'color', hb:'כָּתֹם'}, 
                 {name:'pink', val:'#fd79a8', type:'color', hb:'וָרֹד'}, {name:'purple', val:'#6c5ce7', type:'color', hb:'סָגֹל'}, {name:'black', val:'#2d3436', type:'color', hb:'שָׁחֹר'}, {name:'white', val:'#ffffff', type:'color', hb:'לָבָן'},
-                {name:'gray', val:'#7f8c8d', type:'color', hb:'אָפֹר'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צָהֹב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, 
-                {name:'gold', val:'gold-metallic', type:'special-color', hb:'זָהָב'}, {name:'silver', val:'silver-metallic', type:'special-color', hb:'כֶּסֶף'}, {name:'turquoise', val:'#40e0d0', type:'color', hb:'טוּרְקִיז'}
+                {name:'gray', val:'#7f8c8d', type:'color', hb:'אָפֹר'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צָהֹב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, {name:'gold', val:'gold-metallic', type:'special-color', hb:'זָהָב'}
             ],
             numbers: [
                 {name:'one', val:'1', hb:'אֶחָד'}, {name:'two', val:'2', hb:'שְׁתַּיִם'}, {name:'three', val:'3', hb:'שָׁלוֹשׁ'}, {name:'four', val:'4', hb:'אַרְבַּע'}, 
@@ -193,7 +186,7 @@
                 const style = item.val === 'shape-triangle' ? `border-bottom-color:${item.color}` : `background:${item.color}; color:${item.color}`;
                 return `<div class="shape-draw ${item.val}" style="${style}"></div>`;
             }
-            if(item.type === 'text-shape') return `<span style="font-size:1.6rem; color:${item.color}">${item.val}</span>`;
+            if(item.type === 'text-shape') return `<span style="font-size:1.8rem; color:${item.color}">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
@@ -216,7 +209,7 @@
             document.getElementById('score').innerText = '0';
             document.getElementById('total-pairs').innerText = data.length;
             document.getElementById('timer').innerText = '0';
-            const best = localStorage.getItem('best_cat_' + currentCatKey);
+            const best = localStorage.getItem('best_' + currentCatKey);
             document.getElementById('best-score').innerText = best ? best : '--';
             const board = document.getElementById('game-board');
             board.innerHTML = '';
@@ -246,7 +239,13 @@
                 matchedPairs++;
                 document.getElementById('score').innerText = matchedPairs;
                 flippedCards = []; canFlip = true;
-                if (matchedPairs === categories[currentCatKey].length) { clearInterval(timerInterval); setTimeout(handleWin, 500); }
+                if (matchedPairs === categories[currentCatKey].length) { 
+                    clearInterval(timerInterval); 
+                    const bestKey = 'best_' + currentCatKey;
+                    const lastBest = localStorage.getItem(bestKey);
+                    if (!lastBest || seconds < parseInt(lastBest)) { localStorage.setItem(bestKey, seconds); }
+                    setTimeout(handleWin, 500); 
+                }
             } else { setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 1000); }
         }
 
