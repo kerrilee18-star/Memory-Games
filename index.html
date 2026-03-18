@@ -27,11 +27,11 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        /* Layout Fixes */
+        /* Category Specific Tile Shrinking (Layout only) */
         .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
-        .animals-mode #game-board { gap: 10px; } /* Distinct layout for animals */
+        .compact-mode #game-board { gap: 5px; }
+        .compact-mode .card { aspect-ratio: 1/1.05; } 
 
-        /* General Card Appearance */
         .card { aspect-ratio: 1/1.15; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
         .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
@@ -42,30 +42,26 @@
         .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
         .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; }
-        
-        /* Specific Visual Elements */
         .color-swatch { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .color-mode .visual-box { width: 34px; height: 34px; }
         .color-mode .color-swatch { width: 30px; height: 30px; }
         .color-mode .word { font-size: 0.65rem; margin-top: 2px; font-weight: 900; }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
-        /* Unified Shape Styles - True to their nature */
-        .shape-draw { width: 36px; height: 36px; background: currentColor; }
+        /* Unified Shape Styles */
+        .shape-draw { width: 38px; height: 38px; background: currentColor; }
         .shape-circle { border-radius: 50%; }
-        .shape-square { border-radius: 0; } /* Pointed corners */
-        .shape-rectangle { width: 48px; height: 28px; border-radius: 0; } /* Pointed corners */
+        .shape-square { border-radius: 0; }
+        .shape-rectangle { width: 48px; height: 28px; border-radius: 0; }
         .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
 
-        /* Smooth, True Heart Shape using SVG Background */
+        /* Fixed SVG Heart */
         .shape-heart-flat { 
             background: none !important;
-            width: 36px; 
-            height: 36px; 
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
+            mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+            -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+            mask-size: contain; -webkit-mask-size: contain;
         }
 
         .stats { display: flex; gap: 4px; }
@@ -154,7 +150,7 @@
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
                 {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
                 {name:'heart', val:'shape-heart-flat', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
-                {name:'diamond', val:'Diamond', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
+                {name:'diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
                 {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מַלְבֵּן'}, 
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
                 {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}
@@ -198,21 +194,18 @@
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
             if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
             if(item.type === 'shape') {
-                if (item.val === 'shape-heart-flat') {
-                    // Inject Smooth SVG Heart
-                    return `<div class="shape-draw shape-heart-flat" style="color:${item.color}; background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 40 40&quot; fill=&quot;currentColor&quot;><path d=&quot;M20 10 C 15 0, 0 5, 0 20 C 0 35, 20 40, 20 40 C 20 40, 40 35, 40 20 C 40 5, 25 0, 20 10&quot;></path></svg>');"></div>`;
-                }
                 return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
             }
-            if(item.name === 'diamond') return `<span style="font-size:2.5rem; color:${item.color}">◆</span>`;
+            if(item.type === 'text-shape') return `<span style="font-size:2.5rem; color:${item.color}">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
         function startGame(label, key) { 
             currentCatKey = key;
             const scr = document.getElementById('game-screen');
-            // Apply category-specific modes
-            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (key === 'animals' ? ' animals-mode' : '');
+            // Apply compact layout for larger sets like Animals and Body Parts
+            const isCompact = ['animals', 'body', 'numbers', 'school'].includes(key);
+            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (isCompact ? ' compact-mode' : '');
             
             document.getElementById('main-menu').style.display = 'none'; 
             scr.style.display = 'flex'; 
