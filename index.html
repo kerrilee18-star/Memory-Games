@@ -27,12 +27,11 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
+        /* Layout Fixes */
         .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
-        .color-mode .card { border-radius: 6px; }
-        .color-mode .visual-box { width: 34px; height: 34px; }
-        .color-mode .color-swatch { width: 30px; height: 30px; }
-        .color-mode .word { font-size: 0.65rem; margin-top: 2px; font-weight: 900; }
+        .animals-mode #game-board { gap: 10px; } /* Distinct layout for animals */
 
+        /* General Card Appearance */
         .card { aspect-ratio: 1/1.15; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
         .card.flipped { background: white; transform: rotateY(180deg); border: 3px solid var(--primary); }
@@ -43,17 +42,31 @@
         .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
         .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Specific Visual Elements */
         .color-swatch { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .color-mode .visual-box { width: 34px; height: 34px; }
+        .color-mode .color-swatch { width: 30px; height: 30px; }
+        .color-mode .word { font-size: 0.65rem; margin-top: 2px; font-weight: 900; }
         .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
-        /* Unified Shape Styles */
-        .shape-draw { width: 40px; height: 40px; background: currentColor; }
+        /* Unified Shape Styles - True to their nature */
+        .shape-draw { width: 36px; height: 36px; background: currentColor; }
         .shape-circle { border-radius: 50%; }
-        .shape-square { border-radius: 4px; }
-        .shape-rectangle { width: 50px; height: 30px; border-radius: 4px; }
+        .shape-square { border-radius: 0; } /* Pointed corners */
+        .shape-rectangle { width: 48px; height: 28px; border-radius: 0; } /* Pointed corners */
         .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-        .shape-oval { width: 50px; height: 32px; border-radius: 50%; }
-        .shape-heart-flat { clip-path: polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%); }
+        .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
+
+        /* Smooth, True Heart Shape using SVG Background */
+        .shape-heart-flat { 
+            background: none !important;
+            width: 36px; 
+            height: 36px; 
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 58px; text-align: center; }
@@ -141,7 +154,7 @@
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
                 {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
                 {name:'heart', val:'shape-heart-flat', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
-                {name:'diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
+                {name:'diamond', val:'Diamond', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
                 {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מַלְבֵּן'}, 
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
                 {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}
@@ -185,16 +198,22 @@
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
             if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
             if(item.type === 'shape') {
+                if (item.val === 'shape-heart-flat') {
+                    // Inject Smooth SVG Heart
+                    return `<div class="shape-draw shape-heart-flat" style="color:${item.color}; background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 40 40&quot; fill=&quot;currentColor&quot;><path d=&quot;M20 10 C 15 0, 0 5, 0 20 C 0 35, 20 40, 20 40 C 20 40, 40 35, 40 20 C 40 5, 25 0, 20 10&quot;></path></svg>');"></div>`;
+                }
                 return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
             }
-            if(item.type === 'text-shape') return `<span style="font-size:2rem; color:${item.color}">${item.val}</span>`;
+            if(item.name === 'diamond') return `<span style="font-size:2.5rem; color:${item.color}">◆</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
         function startGame(label, key) { 
             currentCatKey = key;
             const scr = document.getElementById('game-screen');
-            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '');
+            // Apply category-specific modes
+            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (key === 'animals' ? ' animals-mode' : '');
+            
             document.getElementById('main-menu').style.display = 'none'; 
             scr.style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label.toLowerCase();
