@@ -53,6 +53,13 @@
         .shape-rectangle { width: 48px; height: 28px; border-radius: 0; }
         .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
+        
+        /* Solid Tone Heart Shape */
+        .shape-heart-solid { 
+            background: currentColor;
+            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+            width: 40px; height: 40px; transform: scale(1.6);
+        }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 58px; text-align: center; }
@@ -67,8 +74,8 @@
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
-        .vocab-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .vocab-table td { padding: 10px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin: 15px 0; table-layout: fixed; }
+        .vocab-table td { padding: 12px 4px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
         .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
         .spk-btn { background: #f0edff; border: none; padding: 10px; border-radius: 10px; color: var(--primary); cursor: pointer; }
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
@@ -139,7 +146,7 @@
                 {name:'circle', val:'shape-circle', type:'shape', color:'#fd79a8', hb:'עִגּוּל'}, 
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
                 {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
-                {name:'heart', val:'♥', type:'text-shape', color:'#e74c3c', hb:'לֵב'}, 
+                {name:'heart', val:'shape-heart-solid', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
                 {name:'diamond', val:'◆', type:'text-shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
                 {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מַלְבֵּן'}, 
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
