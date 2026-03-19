@@ -27,8 +27,8 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        /* Grid for Colors (12 pairs = 24 cards) */
-        .color-mode #game-board { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .compact-mode #game-board { gap: 5px; }
+        .compact-mode .card { aspect-ratio: 1/1.05; } 
 
         .card { aspect-ratio: 1/1.15; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
@@ -36,31 +36,27 @@
         .card.flipped .content { display: flex; transform: rotateY(180deg); }
         .card.matched { background: #f0fff4 !important; border-color: var(--secondary) !important; opacity: 0.4; }
 
-        .emoji { font-size: clamp(1.8rem, 10vw, 3rem); line-height: 1; }
-        .word { font-size: 0.85rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
+        .emoji { font-size: clamp(1.6rem, 9vw, 3.2rem); }
+        .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; position: relative; margin: 0 auto; }
         
-        /* Shapes Styling */
-        .shape-draw { background: currentColor; }
-        .shape-circle { width: 38px; height: 38px; border-radius: 50%; }
-        .shape-square { width: 38px; height: 38px; }
-        .shape-rectangle { width: 46px; height: 26px; }
-        .shape-triangle { width: 38px; height: 38px; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-        .shape-oval { width: 46px; height: 28px; border-radius: 50%; }
-        .shape-diamond { width: 30px; height: 46px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        /* Shapes */
+        .shape-draw { width: 38px; height: 38px; background: currentColor; }
+        .shape-circle { border-radius: 50%; }
+        .shape-square { border-radius: 0; }
+        .shape-rectangle { width: 48px; height: 28px; border-radius: 0; }
+        .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
+        .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
         
-        /* Fixed Heart - Lifted up to match circle/square alignment */
-        .shape-heart { 
-            width: 40px; height: 40px; 
-            background: currentColor; 
-            clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.06 3.06 6.06 12 14.125 8.94-8.065 12-10.065 12-14.125 0-8.165-10.011-8.967-12-3.568z'); 
-            transform: scale(1.8);
-            margin-bottom: 6px; 
+        /* Centered Solid Heart - Refined Spacing */
+        .shape-heart-solid { 
+            background: currentColor;
+            width: 40px; height: 40px;
+            clip-path: path('M20,35.09L18.55,33.77C13.4,29.09,10,26.01,10,22.23C10,19.15,12.42,16.73,15.5,16.73C17.24,16.73,18.91,17.54,20,18.82C21.09,17.54,22.76,16.73,24.5,16.73C27.58,16.73,30,19.15,30,22.23C30,26.01,26.6,29.09,21.45,33.77L20,35.09Z');
+            transform: scale(2.2) translateY(-2px); 
         }
-
-        .color-swatch { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
-        .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 58px; text-align: center; }
@@ -75,11 +71,10 @@
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
-        /* Fixed Equal Spacing for Vocabulary List */
-        .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 15px; margin: 10px 0; }
-        .vocab-table td { padding: 12px 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        /* Fixed Vocabulary Spacing */
+        .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 20px; margin: 10px 0; }
+        .vocab-table td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
-        
         .spk-btn { background: #f0edff; border: none; padding: 10px; border-radius: 10px; color: var(--primary); cursor: pointer; }
         .primary-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: inherit; }
     </style>
@@ -90,7 +85,7 @@
         <h1>🧠 Memory Game</h1>
         <div class="instruction-box">
             <p style="margin: 0 0 5px 0;">Click the tiles to match the pairs!<br>How fast can you find all the pairs?</p>
-            <p dir="rtl" style="font-weight: 600; margin:0;">!לַחֲצוּ עַל הָאֲרִיחִים כְּדֵי לְהַתְאִים אֶת הַזּוּגוֹת<br>?כַּמָּה מַהֵר תּוּכְלוּ לִמְצֹא אֶת כָּל הַזּוּגוֹת</p>
+            <p dir="rtl" style="font-weight: 600; margin:0;">לַחֲצוּ עַל הָאֲרִיחִים כְּדֵי לְהַתְאִים אֶת הַזּוּגוֹת!<br>כַּמָּה מַהֵר תּוּכְלוּ לִמְצֹא אֶת כָּל הַזּוּגוֹת?</p>
         </div>
         <div class="menu-grid">
             <button class="lvl-btn" onclick="startGame('Animals', 'animals')"><b>animals</b> חַיּוֹת</button>
@@ -124,14 +119,14 @@
         <div class="pop-box">
             <h2 id="lvl-title">category</h2>
             <h3 id="lvl-title-hb" dir="rtl" style="color: var(--primary); margin-top: -10px;">קטגוריה</h3>
-            <p>?Ready? / מוּכָנִים</p>
-            <button class="primary-btn" onclick="beginTimer()">!START! / הַתְחֵל</button>
+            <p>Ready? / מוּכָנִים?</p>
+            <button class="primary-btn" onclick="beginTimer()">START! / הַתְחֵל!</button>
         </div>
     </div>
 
     <div id="win-overlay" class="overlay">
         <div class="pop-box">
-            <h2 style="color: var(--secondary); margin:0;">!EXCELLENT! / כָּל הַכָּבוֹד</h2>
+            <h2 style="color: var(--secondary); margin:0;">EXCELLENT! / כָּל הַכָּבוֹד!</h2>
             <table class="vocab-table" id="review-table"></table>
             <button class="primary-btn" style="background:var(--secondary);" onclick="resetGame()">PLAY AGAIN / שַׂחֵק שׁוּב</button>
             <button class="primary-btn" onclick="showMenu()">BACK TO MENU / חֲזָרָה לַתַּפְרִיט</button>
@@ -140,25 +135,48 @@
 
     <script>
         const categories = {
-            animals: { hb: 'חַיּוֹת', data: [{name:'dog', val:'🐶', hb:'כֶּלֶב'}, {name:'cat', val:'🐱', hb:'חתול'}, {name:'mouse', val:'🐭', hb:'עַכְבָּר'}, {name:'rabbit', val:'🐰', hb:'אַרְנָב'}, {name:'lion', val:'🦁', hb:'אַרְיֵה'}, {name:'cow', val:'🐮', hb:'פָּרָה'}, {name:'penguin', val:'🐧', hb:'פִּינְגְּוִין'}, {name:'frog', val:'🐸', hb:'צְפַרְדֵּעַ'}, {name:'monkey', val:'🐵', hb:'קוֹף'}, {name:'tiger', val:'🐯', hb:'נָמֵר'}]},
-            shapes: { hb: 'צוּרוֹת', data: [
+            animals: { label: 'animals', hb: 'חַיּוֹת', data: [
+                {name:'dog', val:'🐶', hb:'כֶּלֶב'}, {name:'cat', val:'🐱', hb:'חָתוּל'}, {name:'mouse', val:'🐭', hb:'עַכְבָּר'}, {name:'rabbit', val:'🐰', hb:'אַרְנָב'}, 
+                {name:'lion', val:'🦁', hb:'אַרְיֵה'}, {name:'cow', val:'🐮', hb:'פָּרָה'}, {name:'penguin', val:'🐧', hb:'פִּינְגְּוִין'}, {name:'frog', val:'🐸', hb:'צְפַרְדֵּעַ'},
+                {name:'monkey', val:'🐵', hb:'קוֹף'}, {name:'tiger', val:'🐯', hb:'נָמֵר'}
+            ]},
+            shapes: { label: 'shapes', hb: 'צוּרוֹת', data: [
                 {name:'circle', val:'shape-circle', type:'shape', color:'#fd79a8', hb:'עִגּוּל'}, 
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
-                {name:'star', val:'★', type:'text', color:'#f1c40f', hb:'כּוֹכָב'}, 
-                {name:'heart', val:'shape-heart', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
+                {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
+                {name:'heart', val:'shape-heart-solid', type:'shape', color:'#e74c3c', hb:'לֵב'}, 
                 {name:'diamond', val:'shape-diamond', type:'shape', color:'#9b59b6', hb:'מְעֻיָּן'}, 
                 {name:'rectangle', val:'shape-rectangle', type:'shape', color:'#2ecc71', hb:'מַלְבֵּן'}, 
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
-                {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}]},
-            school: { hb: 'בֵּית סֵפֶר', data: [{name:'crayon', val:'🖍️', hb:'צִבְעוֹן'}, {name:'pencil', val:'✏️', hb:'עֵט'}, {name:'pen', val:'🖊️', hb:'עֵט'}, {name:'scissors', val:'✂️', hb:'מִסְפָּרַיִם'}, {name:'ruler', val:'📏', hb:'סַרְגֵּל'}, {name:'book', val:'📖', hb:'סֵפֶר'}, {name:'notebook', val:'📓', hb:'מַחְבֶּרֶת'}, {name:'school bag', val:'🎒', hb:'יַלְקוּט'}]},
-            colors: { hb: 'צְבָעִים', data: [
+                {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}
+            ]},
+            school: { label: 'school', hb: 'בֵּית סֵפֶר', data: [
+                {name:'crayon', val:'🖍️', hb:'צִבְעוֹן'}, {name:'pencil', val:'✏️', hb:'עִפָּרוֹן'}, {name:'pen', val:'🖊️', hb:'עֵט'}, {name:'scissors', val:'✂️', hb:'מִסְפָּרַיִם'}, 
+                {name:'ruler', val:'📏', hb:'סַרְגֵּל'}, {name:'book', val:'📖', hb:'סֵפֶר'}, {name:'notebook', val:'📓', hb:'מַחְבֶּרֶת'}, {name:'school bag', val:'🎒', hb:'יַלְקוּט'}
+            ]},
+            colors: { label: 'colors', hb: 'צְבָעִים', data: [
                 {name:'blue', val:'#0984e3', type:'color', hb:'כָּחֹל'}, {name:'red', val:'#d63031', type:'color', hb:'אָדֹם'}, {name:'green', val:'#27ae60', type:'color', hb:'יָרֹק'}, {name:'orange', val:'#e67e22', type:'color', hb:'כָּתֹם'}, 
                 {name:'pink', val:'#fd79a8', type:'color', hb:'וָרֹד'}, {name:'purple', val:'#6c5ce7', type:'color', hb:'סָגֹל'}, {name:'black', val:'#2d3436', type:'color', hb:'שָׁחֹר'}, {name:'white', val:'#ffffff', type:'color', hb:'לָבָן'},
-                {name:'gray', val:'#7f8c8d', type:'color', hb:'אָפֹר'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צָהֹב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, {name:'gold', val:'gold-metallic', type:'special-color', hb:'זָהָב'}]},
-            numbers: { hb: 'מִסְפָּרִים', data: [{name:'one', val:'1', hb:'אֶחָד'}, {name:'two', val:'2', hb:'שְׁתַּיִם'}, {name:'three', val:'3', hb:'שָׁלוֹשׁ'}, {name:'four', val:'4', hb:'אַרְבַּע'}, {name:'five', val:'5', hb:'חָמֵשׁ'}, {name:'six', val:'6', hb:'שֵׁשׁ'}, {name:'seven', val:'7', hb:'שֶׁבַע'}, {name:'eight', val:'8', hb:'שְׁמוֹנֶה'}, {name:'nine', val:'9', hb:'תֵּשַׁע'}, {name:'ten', val:'10', hb:'עֶשֶׂר'}]},
-            body: { hb: 'חֶלְקֵי גּוּף', data: [{name:'eyes', val:'👀', hb:'עֵינַיִם'}, {name:'ear', val:'👂', hb:'אֹזֶן'}, {name:'nose', val:'👃', hb:'אַף'}, {name:'hands', val:'🙌', hb:'יָדַיִם'}, {name:'foot', val:'🦶', hb:'כַּף רֶגֶל'}, {name:'leg', val:'🦵', hb:'רֶגֶל'}, {name:'arm', val:'💪', hb:'זְרוֹעַ'}, {name:'tooth', val:'🦷', hb:'שֵׁן'}, {name:'tongue', val:'👅', hb:'לָשׁוֹן'}, {name:'brain', val:'🧠', hb:'מוח'}]},
-            emotions: { hb: 'רְגָשׁוֹת', data: [{name:'happy', val:'😀', hb:'שָׂמֵחַ'}, {name:'sad', val:'😢', hb:'עָצוּב'}, {name:'angry', val:'😡', hb:'כּוֹעֵס'}, {name:'tired', val:'🥱', hb:'עָיֵף'}, {name:'sick', val:'🤒', hb:'חוֹלֶה'}, {name:'excited', val:'🤩', hb:'נִרְגָּשׁ'}, {name:'scared', val:'😨', hb:'מְפֻחָד'}, {name:'surprised', val:'😮', hb:'מֻפְתָּע'}]},
-            sport: { hb: 'סְפּוֹרְט', data: [{name:'soccer', val:'⚽', hb:'כַּדּוּרֶגֶל'}, {name:'basketball', val:'🏀', hb:'כַּדּוּרְסַל'}, {name:'tennis', val:'🎾', hb:'טֶנִיס'}, {name:'baseball', val:'⚾', hb:'בֵּיְסְבּוֹל'}, {name:'football', val:'🏈', hb:'פּוּטְבּוֹל'}, {name:'ping pong', val:'🏓', hb:'פִּינְג פּוֹנְג'}]}
+                {name:'gray', val:'#7f8c8d', type:'color', hb:'אָפֹר'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צָהֹב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, {name:'gold', val:'gold-metallic', type:'special-color', hb:'זָהָב'}
+            ]},
+            numbers: { label: 'numbers', hb: 'מִסְפָּרִים', data: [
+                {name:'one', val:'1', hb:'אֶחָד'}, {name:'two', val:'2', hb:'שְׁתַּיִם'}, {name:'three', val:'3', hb:'שָׁלוֹשׁ'}, {name:'four', val:'4', hb:'אַרְבַּע'}, 
+                {name:'five', val:'5', hb:'חָמֵשׁ'}, {name:'six', val:'6', hb:'שֵׁשׁ'}, {name:'seven', val:'7', hb:'שֶׁבַע'}, {name:'eight', val:'8', hb:'שְׁמוֹנֶה'},
+                {name:'nine', val:'9', hb:'תֵּשַׁע'}, {name:'ten', val:'10', hb:'עֶשֶׂר'}
+            ]},
+            body: { label: 'body parts', hb: 'חֶלְקֵי גּוּף', data: [
+                {name:'eyes', val:'👀', hb:'עֵינַיִם'}, {name:'ear', val:'👂', hb:'אֹזֶן'}, {name:'nose', val:'👃', hb:'אַף'}, {name:'hands', val:'🙌', hb:'יָדַיִם'}, 
+                {name:'foot', val:'🦶', hb:'כַּף רֶגֶל'}, {name:'leg', val:'🦵', hb:'רֶגֶל'}, {name:'arm', val:'💪', hb:'זְרוֹעַ'}, {name:'tooth', val:'🦷', hb:'שֵׁן'},
+                {name:'tongue', val:'👅', hb:'לָשׁוֹן'}, {name:'brain', val:'🧠', hb:'מֹחַ'}
+            ]},
+            emotions: { label: 'emotions', hb: 'רְגָשׁוֹת', data: [
+                {name:'happy', val:'😀', hb:'שָׂמֵחַ'}, {name:'sad', val:'😢', hb:'עָצוּב'}, {name:'angry', val:'😡', hb:'כּוֹעֵס'}, {name:'tired', val:'🥱', hb:'עָיֵף'},
+                {name:'sick', val:'🤒', hb:'חוֹלֶה'}, {name:'excited', val:'🤩', hb:'נִרְגָּשׁ'}, {name:'scared', val:'😨', hb:'מְפֻחָד'}, {name:'surprised', val:'😮', hb:'מֻפְתָּע'}
+            ]},
+            sport: { label: 'sport', hb: 'סְפּוֹרְט', data: [
+                {name:'soccer', val:'⚽', hb:'כַּדּוּרֶגֶל'}, {name:'basketball', val:'🏀', hb:'כַּדּוּרְסַל'}, {name:'tennis', val:'🎾', hb:'טֶנִיס'},
+                {name:'baseball', val:'⚾', hb:'בֵּיְסְבּוֹל'}, {name:'football', val:'🏈', hb:'פּוּטְבּוֹל'}, {name:'ping pong', val:'🏓', hb:'פִּינְג פּוֹנְג'}
+            ]}
         };
 
         let currentCatKey = 'animals', flippedCards = [], matchedPairs = 0, seconds = 0, timerInterval, canFlip = false, isMuted = false;
@@ -167,18 +185,21 @@
         function speak(text) { if (isMuted) return; window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US'; window.speechSynthesis.speak(msg); }
         function showMenu() { location.reload(); }
 
-        function getVisualHTML(item) {
+        function renderVisual(item) {
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
             if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
-            if(item.type === 'shape') return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
-            if(item.type === 'text') return `<span style="font-size:3rem; color:${item.color}">${item.val}</span>`;
+            if(item.type === 'shape') {
+                return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
+            }
+            if(item.type === 'text-shape') return `<span style="font-size:3rem; color:${item.color}">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
 
         function startGame(label, key) { 
             currentCatKey = key;
             const scr = document.getElementById('game-screen');
-            scr.className = 'screen' + (key === 'colors' ? ' color-mode' : '');
+            const isCompact = ['animals', 'body', 'numbers', 'school'].includes(key);
+            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (isCompact ? ' compact-mode' : '');
             document.getElementById('main-menu').style.display = 'none'; 
             scr.style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label.toLowerCase();
@@ -194,6 +215,9 @@
             const data = categories[currentCatKey].data;
             document.getElementById('score').innerText = '0';
             document.getElementById('total-pairs').innerText = data.length;
+            document.getElementById('timer').innerText = '0';
+            const best = localStorage.getItem('best_' + currentCatKey);
+            document.getElementById('best-score').innerText = best ? best : '--';
             const board = document.getElementById('game-board');
             board.innerHTML = '';
             const cardsData = [...data, ...data].sort(() => Math.random() - 0.5);
@@ -201,7 +225,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
-                card.innerHTML = `<div class="content"><div class="visual-box">${getVisualHTML(item)}</div><span class="word">${item.name}</span></div>`;
+                card.innerHTML = `<div class="content"><div class="visual-box">${renderVisual(item)}</div><span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
@@ -224,6 +248,12 @@
                 flippedCards = []; canFlip = true;
                 if (matchedPairs === categories[currentCatKey].data.length) { 
                     clearInterval(timerInterval); 
+                    const bestKey = 'best_' + currentCatKey;
+                    const lastBest = localStorage.getItem(bestKey);
+                    if (!lastBest || seconds < parseInt(lastBest)) { 
+                        localStorage.setItem(bestKey, seconds); 
+                        document.getElementById('best-score').innerText = seconds;
+                    }
                     setTimeout(handleWin, 500); 
                 }
             } else { setTimeout(() => { c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards = []; canFlip = true; }, 1000); }
@@ -235,10 +265,10 @@
             categories[currentCatKey].data.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="width:55px; text-align:center;">${getVisualHTML(item)}</td>
-                    <td style="text-align:left; padding-left:15px;"><b>${item.name}</b></td>
-                    <td style="text-align:right; padding-right:15px;" dir="rtl">${item.hb}</td>
-                    <td style="width:50px;"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
+                    <td style="width:55px; text-align:center;"><div class="visual-box" style="margin:0 auto;">${renderVisual(item)}</div></td>
+                    <td style="text-align:left; padding-left:10px;"><b>${item.name}</b></td>
+                    <td style="text-align:right; padding-right:10px;" dir="rtl">${item.hb}</td>
+                    <td style="width:50px; text-align:center;"><button class="spk-btn" onclick="speak('${item.name}')">🔊</button></td>
                 `;
                 table.appendChild(tr);
             });
