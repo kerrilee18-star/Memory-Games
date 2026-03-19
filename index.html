@@ -39,23 +39,28 @@
         .emoji { font-size: clamp(1.6rem, 9vw, 3.2rem); }
         .word { font-size: 0.9rem; font-weight: 900; margin-top: 4px; text-transform: lowercase; color: #2d3436; }
 
-        .visual-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; position: relative; }
+        /* Unified visual-box constraints for shapes category */
+        .color-mode #game-board .visual-box,
+        .shapes-mode #game-board .visual-box { width: 50px; height: 50px; position: relative; }
         
-        /* Shapes */
-        .shape-draw { width: 38px; height: 38px; background: currentColor; }
-        .shape-circle { border-radius: 50%; }
-        .shape-square { border-radius: 0; }
-        .shape-rectangle { width: 48px; height: 28px; border-radius: 0; }
-        .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-        .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
-        .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        /* Unified Shape Draw constraints for true shapes */
+        .color-mode .shape-draw,
+        .shapes-mode .shape-draw { width: 40px; height: 40px; background: currentColor; position: absolute; left: 5px; top: 5px; }
         
-        /* Centered Solid Heart */
+        /* Custom shape-specific spacing adjustments */
+        .shape-rectangle { width: 48px; height: 28px; left: 1px; top: 11px; }
+        .shape-triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); width: 40px; height: 40px; left: 5px; top: 5px; }
+        .shape-oval { width: 48px; height: 30px; border-radius: 50%; left: 1px; top: 10px; }
+        .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); left: 9px; top: 1px; }
+        
+        /* Fixed Heart Position: Same top position as Star (4px) and Oval (10px) */
         .shape-heart-solid { 
             background: currentColor;
             width: 40px; height: 40px;
             clip-path: path('M20,35.09L18.55,33.77C13.4,29.09,10,26.01,10,22.23C10,19.15,12.42,16.73,15.5,16.73C17.24,16.73,18.91,17.54,20,18.82C21.09,17.54,22.76,16.73,24.5,16.73C27.58,16.73,30,19.15,30,22.23C30,26.01,26.6,29.09,21.45,33.77L20,35.09Z');
             transform: scale(2.2); 
+            top: 7px; /* Adjusted to be vertically aligned with circle/star on card center */
+            left: 5px;
         }
 
         .stats { display: flex; gap: 4px; }
@@ -71,7 +76,6 @@
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
-        /* Table Spacing */
         .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 12px; margin: 10px 0; }
         .vocab-table td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
@@ -136,7 +140,7 @@
     <script>
         const categories = {
             animals: { label: 'animals', hb: 'חַיּוֹת', data: [
-                {name:'dog', val:'🐶', hb:'כֶּלֶב'}, {name:'cat', val:'🐱', hb:'חָתוּל'}, {name:'mouse', val:'🐭', hb:'עַכְבָּר'}, {name:'rabbit', val:'🐰', hb:'אַרְנָב'}, 
+                {name:'dog', val:'🐶', hb:'כֶּלֶב'}, {name:'cat', val:'🐱', hb:'חתול'}, {name:'mouse', val:'🐭', hb:'עַכְבָּר'}, {name:'rabbit', val:'🐰', hb:'אַרְנָב'}, 
                 {name:'lion', val:'🦁', hb:'אַרְיֵה'}, {name:'cow', val:'🐮', hb:'פָּרָה'}, {name:'penguin', val:'🐧', hb:'פִּינְגְּוִין'}, {name:'frog', val:'🐸', hb:'צְפַרְדֵּעַ'},
                 {name:'monkey', val:'🐵', hb:'קוֹף'}, {name:'tiger', val:'🐯', hb:'נָמֵר'}
             ]},
@@ -167,7 +171,7 @@
             body: { label: 'body parts', hb: 'חֶלְקֵי גּוּף', data: [
                 {name:'eyes', val:'👀', hb:'עֵינַיִם'}, {name:'ear', val:'👂', hb:'אֹזֶן'}, {name:'nose', val:'👃', hb:'אַף'}, {name:'hands', val:'🙌', hb:'יָדַיִם'}, 
                 {name:'foot', val:'🦶', hb:'כַּף רֶגֶל'}, {name:'leg', val:'🦵', hb:'רֶגֶל'}, {name:'arm', val:'💪', hb:'זְרוֹעַ'}, {name:'tooth', val:'🦷', hb:'שֵׁן'},
-                {name:'tongue', val:'👅', hb:'לָשׁוֹן'}, {name:'brain', val:'🧠', hb:'מֹחַ'}
+                {name:'tongue', val:'👅', hb:'לָשׁוֹן'}, {name:'brain', val:'🧠', hb:'מוח'}
             ]},
             emotions: { label: 'emotions', hb: 'רְגָשׁוֹת', data: [
                 {name:'happy', val:'😀', hb:'שָׂמֵחַ'}, {name:'sad', val:'😢', hb:'עָצוּב'}, {name:'angry', val:'😡', hb:'כּוֹעֵס'}, {name:'tired', val:'🥱', hb:'עָיֵף'},
@@ -186,20 +190,21 @@
         function showMenu() { location.reload(); }
 
         function renderVisual(item) {
-            if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
-            if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
+            if(item.type === 'color') return `<div class="visual-box"><div class="color-swatch" style="background:${item.val}"></div></div>`;
+            if(item.type === 'special-color') return `<div class="visual-box"><div class="color-swatch ${item.val}"></div></div>`;
             if(item.type === 'shape') {
-                return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
+                return `<div class="visual-box"><div class="shape-draw ${item.val}" style="color:${item.color}"></div></div>`;
             }
-            if(item.type === 'text-shape') return `<span style="font-size:3rem; color:${item.color}">${item.val}</span>`;
-            return `<span class="emoji">${item.val}</span>`;
+            if(item.type === 'text-shape') return `<div class="visual-box"><span style="font-size:3rem; color:${item.color}">${item.val}</span></div>`;
+            return `<div class="visual-box"><span class="emoji">${item.val}</span></div>`;
         }
 
         function startGame(label, key) { 
             currentCatKey = key;
             const scr = document.getElementById('game-screen');
             const isCompact = ['animals', 'body', 'numbers', 'school'].includes(key);
-            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (isCompact ? ' compact-mode' : '');
+            scr.className = 'screen ' + (key === 'colors' ? 'color-mode' : '') + (key === 'shapes' ? ' shapes-mode' : '') + (isCompact ? ' compact-mode' : '');
+            
             document.getElementById('main-menu').style.display = 'none'; 
             scr.style.display = 'flex'; 
             document.getElementById('lvl-title').innerText = label.toLowerCase();
@@ -225,7 +230,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = item.name;
-                card.innerHTML = `<div class="content"><div class="visual-box">${renderVisual(item)}</div><span class="word">${item.name}</span></div>`;
+                card.innerHTML = `<div class="content">${renderVisual(item)}<span class="word">${item.name}</span></div>`;
                 card.onclick = () => flipCard(card, item.name);
                 board.appendChild(card);
             });
