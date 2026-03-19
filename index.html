@@ -27,8 +27,16 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
+        /* Compact Mode (Animals, Numbers, etc) */
         .compact-mode #game-board { gap: 5px; }
         .compact-mode .card { aspect-ratio: 1/1.05; } 
+
+        /* PERFECT COLOR MODE GRID */
+        .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
+        .color-mode .card { border-radius: 6px; aspect-ratio: 1/1.1; }
+        .color-mode .visual-box { width: 32px; height: 32px; }
+        .color-mode .color-swatch { width: 28px; height: 28px; }
+        .color-mode .word { font-size: 0.6rem; margin-top: 2px; }
 
         .card { aspect-ratio: 1/1.15; background: var(--card-back); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s; position: relative; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; }
         .card .content { display: none; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
@@ -50,13 +58,16 @@
         .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
         .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
         
-        /* Centered Solid Heart - Refined Spacing */
+        /* Centered Solid Heart */
         .shape-heart-solid { 
             background: currentColor;
             width: 40px; height: 40px;
             clip-path: path('M20,35.09L18.55,33.77C13.4,29.09,10,26.01,10,22.23C10,19.15,12.42,16.73,15.5,16.73C17.24,16.73,18.91,17.54,20,18.82C21.09,17.54,22.76,16.73,24.5,16.73C27.58,16.73,30,19.15,30,22.23C30,26.01,26.6,29.09,21.45,33.77L20,35.09Z');
             transform: scale(2.2) translateY(-2px); 
         }
+
+        .color-swatch { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .gold-metallic { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
 
         .stats { display: flex; gap: 4px; }
         .stat-box { background: #f8f9fa; padding: 4px 6px; border-radius: 10px; min-width: 58px; text-align: center; }
@@ -71,7 +82,6 @@
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .pop-box { background: white; padding: 25px; border-radius: 25px; text-align: center; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         
-        /* Fixed Vocabulary Spacing */
         .vocab-table { width: 100%; border-collapse: separate; border-spacing: 0 20px; margin: 10px 0; }
         .vocab-table td { padding: 8px 4px; border-bottom: 1px solid #eee; vertical-align: middle; }
         .vocab-table b { font-size: 1.1rem; text-transform: lowercase; }
@@ -135,12 +145,12 @@
 
     <script>
         const categories = {
-            animals: { label: 'animals', hb: 'חַיּוֹת', data: [
+            animals: { hb: 'חַיּוֹת', data: [
                 {name:'dog', val:'🐶', hb:'כֶּלֶב'}, {name:'cat', val:'🐱', hb:'חָתוּל'}, {name:'mouse', val:'🐭', hb:'עַכְבָּר'}, {name:'rabbit', val:'🐰', hb:'אַרְנָב'}, 
                 {name:'lion', val:'🦁', hb:'אַרְיֵה'}, {name:'cow', val:'🐮', hb:'פָּרָה'}, {name:'penguin', val:'🐧', hb:'פִּינְגְּוִין'}, {name:'frog', val:'🐸', hb:'צְפַרְדֵּעַ'},
                 {name:'monkey', val:'🐵', hb:'קוֹף'}, {name:'tiger', val:'🐯', hb:'נָמֵר'}
             ]},
-            shapes: { label: 'shapes', hb: 'צוּרוֹת', data: [
+            shapes: { hb: 'צוּרוֹת', data: [
                 {name:'circle', val:'shape-circle', type:'shape', color:'#fd79a8', hb:'עִגּוּל'}, 
                 {name:'square', val:'shape-square', type:'shape', color:'#3498db', hb:'רִבּוּעַ'}, 
                 {name:'star', val:'★', type:'text-shape', color:'#f1c40f', hb:'כּוֹכָב'}, 
@@ -150,30 +160,30 @@
                 {name:'triangle', val:'shape-triangle', type:'shape', color:'#e67e22', hb:'מְשֻׁלָּשׁ'}, 
                 {name:'oval', val:'shape-oval', type:'shape', color:'#7f8c8d', hb:'אֵלִיפְּסָה'}
             ]},
-            school: { label: 'school', hb: 'בֵּית סֵפֶר', data: [
+            school: { hb: 'בֵּית סֵפֶר', data: [
                 {name:'crayon', val:'🖍️', hb:'צִבְעוֹן'}, {name:'pencil', val:'✏️', hb:'עִפָּרוֹן'}, {name:'pen', val:'🖊️', hb:'עֵט'}, {name:'scissors', val:'✂️', hb:'מִסְפָּרַיִם'}, 
                 {name:'ruler', val:'📏', hb:'סַרְגֵּל'}, {name:'book', val:'📖', hb:'סֵפֶר'}, {name:'notebook', val:'📓', hb:'מַחְבֶּרֶת'}, {name:'school bag', val:'🎒', hb:'יַלְקוּט'}
             ]},
-            colors: { label: 'colors', hb: 'צְבָעִים', data: [
+            colors: { hb: 'צְבָעִים', data: [
                 {name:'blue', val:'#0984e3', type:'color', hb:'כָּחֹל'}, {name:'red', val:'#d63031', type:'color', hb:'אָדֹם'}, {name:'green', val:'#27ae60', type:'color', hb:'יָרֹק'}, {name:'orange', val:'#e67e22', type:'color', hb:'כָּתֹם'}, 
                 {name:'pink', val:'#fd79a8', type:'color', hb:'וָרֹד'}, {name:'purple', val:'#6c5ce7', type:'color', hb:'סָגֹל'}, {name:'black', val:'#2d3436', type:'color', hb:'שָׁחֹר'}, {name:'white', val:'#ffffff', type:'color', hb:'לָבָן'},
                 {name:'gray', val:'#7f8c8d', type:'color', hb:'אָפֹר'}, {name:'yellow', val:'#f1c40f', type:'color', hb:'צָהֹב'}, {name:'brown', val:'#795548', type:'color', hb:'חוּם'}, {name:'gold', val:'gold-metallic', type:'special-color', hb:'זָהָב'}
             ]},
-            numbers: { label: 'numbers', hb: 'מִסְפָּרִים', data: [
+            numbers: { hb: 'מִסְפָּרִים', data: [
                 {name:'one', val:'1', hb:'אֶחָד'}, {name:'two', val:'2', hb:'שְׁתַּיִם'}, {name:'three', val:'3', hb:'שָׁלוֹשׁ'}, {name:'four', val:'4', hb:'אַרְבַּע'}, 
                 {name:'five', val:'5', hb:'חָמֵשׁ'}, {name:'six', val:'6', hb:'שֵׁשׁ'}, {name:'seven', val:'7', hb:'שֶׁבַע'}, {name:'eight', val:'8', hb:'שְׁמוֹנֶה'},
                 {name:'nine', val:'9', hb:'תֵּשַׁע'}, {name:'ten', val:'10', hb:'עֶשֶׂר'}
             ]},
-            body: { label: 'body parts', hb: 'חֶלְקֵי גּוּף', data: [
+            body: { hb: 'חֶלְקֵי גּוּף', data: [
                 {name:'eyes', val:'👀', hb:'עֵינַיִם'}, {name:'ear', val:'👂', hb:'אֹזֶן'}, {name:'nose', val:'👃', hb:'אַף'}, {name:'hands', val:'🙌', hb:'יָדַיִם'}, 
                 {name:'foot', val:'🦶', hb:'כַּף רֶגֶל'}, {name:'leg', val:'🦵', hb:'רֶגֶל'}, {name:'arm', val:'💪', hb:'זְרוֹעַ'}, {name:'tooth', val:'🦷', hb:'שֵׁן'},
                 {name:'tongue', val:'👅', hb:'לָשׁוֹן'}, {name:'brain', val:'🧠', hb:'מֹחַ'}
             ]},
-            emotions: { label: 'emotions', hb: 'רְגָשׁוֹת', data: [
+            emotions: { hb: 'רְגָשׁוֹת', data: [
                 {name:'happy', val:'😀', hb:'שָׂמֵחַ'}, {name:'sad', val:'😢', hb:'עָצוּב'}, {name:'angry', val:'😡', hb:'כּוֹעֵס'}, {name:'tired', val:'🥱', hb:'עָיֵף'},
                 {name:'sick', val:'🤒', hb:'חוֹלֶה'}, {name:'excited', val:'🤩', hb:'נִרְגָּשׁ'}, {name:'scared', val:'😨', hb:'מְפֻחָד'}, {name:'surprised', val:'😮', hb:'מֻפְתָּע'}
             ]},
-            sport: { label: 'sport', hb: 'סְפּוֹרְט', data: [
+            sport: { hb: 'סְפּוֹרְט', data: [
                 {name:'soccer', val:'⚽', hb:'כַּדּוּרֶגֶל'}, {name:'basketball', val:'🏀', hb:'כַּדּוּרְסַל'}, {name:'tennis', val:'🎾', hb:'טֶנִיס'},
                 {name:'baseball', val:'⚾', hb:'בֵּיְסְבּוֹל'}, {name:'football', val:'🏈', hb:'פּוּטְבּוֹל'}, {name:'ping pong', val:'🏓', hb:'פִּינְג פּוֹנְג'}
             ]}
@@ -188,9 +198,7 @@
         function renderVisual(item) {
             if(item.type === 'color') return `<div class="color-swatch" style="background:${item.val}"></div>`;
             if(item.type === 'special-color') return `<div class="color-swatch ${item.val}"></div>`;
-            if(item.type === 'shape') {
-                return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
-            }
+            if(item.type === 'shape') return `<div class="shape-draw ${item.val}" style="color:${item.color}"></div>`;
             if(item.type === 'text-shape') return `<span style="font-size:3rem; color:${item.color}">${item.val}</span>`;
             return `<span class="emoji">${item.val}</span>`;
         }
