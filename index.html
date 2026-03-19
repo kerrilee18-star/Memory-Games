@@ -27,11 +27,9 @@
         #game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 6px 10px; background: white; border-radius: 18px; margin-bottom: 8px; }
         #game-board { display: grid; gap: 8px; width: 100%; max-height: 82vh; padding: 2px; justify-content: center; grid-template-columns: repeat(4, 1fr); }
         
-        /* Compact Mode (Animals, Numbers, etc) */
         .compact-mode #game-board { gap: 5px; }
         .compact-mode .card { aspect-ratio: 1/1.05; } 
 
-        /* PERFECT COLOR MODE GRID */
         .color-mode #game-board { grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .color-mode .card { border-radius: 6px; aspect-ratio: 1/1.1; }
         .color-mode .visual-box { width: 32px; height: 32px; }
@@ -58,7 +56,6 @@
         .shape-oval { width: 48px; height: 30px; border-radius: 50%; }
         .shape-diamond { width: 32px; height: 48px; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
         
-        /* Centered Solid Heart */
         .shape-heart-solid { 
             background: currentColor;
             width: 40px; height: 40px;
@@ -94,7 +91,7 @@
     <div id="main-menu" class="screen">
         <h1>🧠 Memory Game</h1>
         <div class="instruction-box">
-            <p style="margin: 0 0 5px 0;">Click the tiles to match the pairs!<br>How fast can you find all the pairs?</p>
+            <p style="margin: 0 0 5px 0;" dir="ltr">Click the tiles to match the pairs!<br>How fast can you find all the pairs?</p>
             <p dir="rtl" style="font-weight: 600; margin:0;">לַחֲצוּ עַל הָאֲרִיחִים כְּדֵי לְהַתְאִים אֶת הַזּוּגוֹת!<br>כַּמָּה מַהֵר תּוּכְלוּ לִמְצֹא אֶת כָּל הַזּוּגוֹת?</p>
         </div>
         <div class="menu-grid">
